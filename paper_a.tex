@@ -1,0 +1,1119 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{hyperref}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}[lemma]{Proposition}
+\newtheorem{corollary}[lemma]{Corollary}
+\newtheorem{conjecture}[lemma]{Conjecture}
+\theoremstyle{remark}
+\newtheorem{remark}[lemma]{Remark}
+\newtheorem{question}[lemma]{Question}
+
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Ze}{Z_{\mathrm{ev}}}
+\newcommand{\rhomax}{\rho}
+\DeclareMathOperator{\tr}{tr}
+
+\title{Parity families and a kernel-averaged $L$-function\\ for near-Ramanujan signings}
+\author{V.\thanks{Draft note, July 2026. Code and data:
+\texttt{signed\_spectra.py}, \texttt{atlas.csv}, \texttt{variance\_onset.csv}.}}
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For a signing $\sigma$ of a $d$-regular graph, the spectrum of
+$A_\sigma$ depends only on the signs of cycles. We study the affine
+$\mathbb F_2$ family of signings making every short even cycle
+unbalanced, and show that averaging over it converts the sign problem
+of the Bilu--Linial conjecture into a counting problem: a master
+identity expresses the family-averaged trace as a parity-weighted sum
+over wrap classes confined to the span $W$ of the constraint cycles,
+and the family-averaged Ihara $L$-function diagonalizes so that every
+prime whose parity escapes $W$ contributes the Ramanujan rate
+$\sqrt{d-1}$ automatically. Uniform averaging over all signings, by
+contrast, provably cannot certify a spectral radius below the Kesten
+profile. We prove matched upper and lower bounds for the confined walk
+counts --- a doubling injection from below, and from above an
+ear-decomposition encoding in which the number of fresh runs of a
+non-backtracking walk equals the cycle rank of its support, combined
+with a window lemma for bicycle-free graphs and a rank bound via the
+Moore bound for irregular graphs. Consequences include
+$\varepsilon$-versions of the Bilu--Linial conjecture: every
+$d$-regular graph that is subcritical at scale $\log n$, and every
+$d$-regular graph bicycle-free at radius
+$C\log\log n/\delta$, admits a signing in the parity family with
+$\rho(A_\sigma)\le2\sqrt{d-1}(1+C\delta\log(1/\delta))(1+o(1))$. We
+further identify the necessary hypotheses exactly ($K_d$-trapping;
+tree-burst gadgets), give an exact certificate on the hypercube, and
+record a decisive obstruction to two-sided interlacing:
+$\mathbb E_\sigma\det(xI-A_\sigma^2)$ is not real-rooted, already for
+the quadrilateral, where it equals $(x^2-4x+2)^2+4$.
+\end{abstract}
+
+\section{Introduction}
+
+Bilu and Linial \cite{bilulinial06} conjectured that every $d$-regular
+graph admits a signing $\sigma\colon E\to\{\pm1\}$ of its adjacency
+matrix with $\rho(A_\sigma)\le2\sqrt{d-1}$, the spectral radius of the
+infinite $d$-regular tree. Since the new eigenvalues of a $2$-lift are
+the eigenvalues of a signed adjacency matrix, the conjecture would
+produce infinite towers of $d$-regular Ramanujan graphs of every
+degree. Marcus, Spielman and Srivastava \cite{mss15} proved the
+one-sided bound $\lambda_{\max}(A_\sigma)\le2\sqrt{d-1}$ via
+interlacing families, resolving the bipartite case; Mohanty, O'Donnell
+and Paredes \cite{mop20} showed that a uniformly random signing is
+near-Ramanujan when every ball of radius $r\gg(\log\log n)^2$ contains
+at most one cycle; and Xu and Zhang \cite{xuzhang26} recently proved
+the two-sided bound $2\sqrt{3(d-1)}$ for all graphs of maximum degree
+$d$. Even the $\varepsilon$-relaxed conjecture remains open in
+general, and the obstruction is concentrated on graphs that are
+locally rich in short cycles.
+
+This paper develops a method adapted to exactly that regime. The
+spectrum of $A_\sigma$ depends only on the switching class of
+$\sigma$, i.e.\ on the signs of cycles, and short \emph{even} cycles
+enter the even traces --- hence the spectral radius --- at first
+order, while odd cycles enter only in pairs
+(Lemma~\ref{lem:parity}). We therefore work with the affine
+$\mathbb F_2$ solution family $\mathcal F$ of the system ``every even
+cycle of length $\le L$ is unbalanced''. Averaging over $\mathcal F$
+has two structural consequences. First, a \emph{master identity}
+(Proposition~\ref{prop:master}): the family-averaged trace equals a
+parity-weighted sum of walk counts over wrap classes confined to the
+span $W$ of the constraint cycles --- every walk whose parity touches
+a long cycle is annihilated, single constraint cycles enter with a
+deterministic $-1$, pairs with $+1$. Second, a \emph{kernel-averaged
+$L$-function} (Proposition~\ref{prop:Lident}): Bass's Euler product
+diagonalizes under the family average, the primes whose parity escapes
+$W$ contributing exactly $\tfrac12\log\det(I-u^2B)$, which is analytic
+precisely in the Ramanujan disk $|u|<(d-1)^{-1/2}$. The entire
+deviation of the averaged $L$-function from the Ramanujan rate is
+carried by parity-confined primes: at the level of this identity the
+sign problem becomes a counting problem (Question~\ref{q:confined}),
+while the quantitative proofs below run through the trace certificate
+of Corollary~\ref{cor:certificate} at $k\asymp\log n$. By contrast, the
+uniform average over all signings retains only the totally even
+walks, whose number always dominates the tree profile
+(Corollary~\ref{cor:certificate}): uniform averaging can never certify
+a sub-Kesten signing, while the family average can and, in
+computation, does.
+
+Our main theorems bound the confined counts and convert them into
+signings. From below, a doubling injection shows the totally even
+non-backtracking walks grow at rate exactly $\sqrt{d-1}$
+(Proposition~\ref{prop:slice}); from above we prove a matching bound
+whose engine is the observation that in a non-backtracking walk the
+maximal runs of fresh edges are precisely the ears of an ear
+decomposition of the support, so their number equals its cycle rank
+(Proposition~\ref{prop:upper}). Two further ingredients extend the
+count from bounded rank to bounded cycle density: a \emph{window
+lemma} --- in a graph whose $R$-balls are at most unicyclic, a
+non-backtracking path is determined per $R$-window by endpoints,
+direction and winding, so paths grow at rate $\exp(O(\log(sR)/R))$
+(Lemma~\ref{lem:window}) --- and a \emph{rank lemma} via the Moore
+bound for irregular graphs \cite{ahl02}: bicycle-free graphs with $s$
+edges have cycle rank at most $1+Cs\log s/R$
+(Lemma~\ref{lem:rank}), the $\log s$ being necessary because
+high-girth cages are bicycle-free with rank density approaching one.
+The resulting $\varepsilon$-theorems
+(Propositions~\ref{thm:eps} and~\ref{thm:bf}) produce, for every
+$d$-regular graph that is subcritical at scale $\log n$ or
+bicycle-free at radius $C\log\log n/\delta$, a signing in the parity
+family with
+$\rho(A_\sigma)\le2\sqrt{d-1}\,(1+C\delta\log(1/\delta))(1+o(1))$ ---
+the hypothesis scale of \cite{mop20}, reached by an independent route,
+with the conclusion holding inside the constrained family (including
+$W=\{0\}$, which recovers a near-Ramanujan statement for random
+signings).
+
+The hypotheses are shown to be necessary in a strong sense: a $K_d$
+subgraph traps totally even walks at rate $d-2>\sqrt{d-1}$
+(Proposition~\ref{prop:trap}), and tree-burst gadgets realize the
+window lemma's rate, so both the core exclusion and the
+$\log\log n$ radius are sharp in form. Along the way we give an exact
+certificate on the hypercube --- every solution of the quadrilateral
+system satisfies $A_\sigma^2=nI$, recovering Huang's signing
+\cite{huang19} as a special case of the family
+(Proposition~\ref{prop:cube}) --- and we record why the natural
+two-sided extension of the interlacing method fails at the first
+gate: $\mathbb E_\sigma\det(xI-A_\sigma^2)$ is not real-rooted, with
+the exact identity $q_{C_4}=(x^2-4x+2)^2+4$
+(Remark~\ref{rem:qG}). All identities and bounds in this paper were
+additionally verified by exact computation; the experiments, which
+guided the constructions and falsified two intermediate conjectures,
+are summarized in Section~\ref{sec:experiments}. Exact spectral
+results for signed circulants arising from the same family appear in
+a companion note \cite{companion}.
+
+
+
+\section{Setup}
+
+$G=(V,E)$ is a simple connected graph, $|V|=n$, $|E|=m$, adjacency matrix
+$A$. A signing is $\sigma\in\{\pm1\}^E$, encoded by the bit vector
+$s\in\F_2^E$ with $\sigma_e=(-1)^{s_e}$; the signed adjacency matrix
+$A_\sigma$ has entries $\sigma_{uv}A_{uv}$. We write
+$\rhomax(A_\sigma)=\max_i|\lambda_i(A_\sigma)|$. The cycle space
+$Z(G)\le\F_2^E$ has dimension $m-n+1$; the \emph{sign} of $z\in Z(G)$
+under $\sigma$ is $(-1)^{s\cdot z}$, and a cycle $C$ is \emph{unbalanced}
+if $s\cdot\chi_C=1$. Switching preserves the spectrum and acts trivially
+on cycle signs; conversely the switching class of $\sigma$ is exactly the
+linear functional $z\mapsto s\cdot z$ on $Z(G)$, so there are
+$2^{m-n+1}$ switching classes.
+
+For $d$-regular $G$ the conjecture of Bilu and Linial
+\cite{bilulinial06} asserts $\min_\sigma\rhomax(A_\sigma)\le
+2\sqrt{d-1}$, the spectral radius of the infinite $d$-regular tree.
+Marcus, Spielman and Srivastava \cite{mss15} proved the one-sided bound
+$\lambda_{\max}(A_\sigma)\le2\sqrt{d-1}$ for some $\sigma$, resolving the
+bipartite case; Mohanty, O'Donnell and Paredes \cite{mop20} showed a
+random signing attains $\rhomax\le2\sqrt{d-1}+\varepsilon$ when every
+ball of radius $r\gg(\log\log n)^2$ contains at most one cycle; and Xu
+and Zhang \cite{xuzhang26} recently proved
+$\min_\sigma\rhomax(A_\sigma)\le2\sqrt{3(d-1)}$ for all graphs of maximum
+degree $d$ via interlacing families of mixed characteristic polynomials.
+
+\section{Even-trace parity}
+
+For a closed walk $W$ of length $\ell$ let $m_e(W)$ be the number of
+traversals of $e$, and let $z(W)\in\F_2^E$ be the parity vector
+$z(W)_e=m_e(W)\bmod 2$. Since $W$ is closed, every vertex has even total
+incidence with the edge multiset of $W$, so the support of $z(W)$ has all
+even degrees: $z(W)\in Z(G)$. Moreover
+$|z(W)|\equiv\sum_e m_e(W)=\ell\pmod 2$, and the sign of $W$ under
+$\sigma$ is $\prod_e\sigma_e^{m_e(W)}=(-1)^{s\cdot z(W)}$.
+
+Let $\Ze=\{z\in Z(G):|z|\text{ even}\}$, the kernel of the linear map
+$z\mapsto|z|\bmod2$ on $Z(G)$. If $G$ is bipartite then $\Ze=Z(G)$;
+otherwise $\Ze$ has index $2$, hence dimension $m-n$.
+
+\begin{lemma}[Even-trace parity]\label{lem:parity}
+For every signing $\sigma$ and every even $\ell$,
+\[
+\tr\!\big(A_\sigma^{\ell}\big)
+=\sum_{z\in \Ze} N_\ell(z)\,(-1)^{s\cdot z},
+\]
+where $N_\ell(z)\ge0$ is the number of closed $\ell$-walks in $G$ with
+parity vector $z$, independent of $\sigma$.
+\end{lemma}
+
+\begin{proof}
+Group the closed $\ell$-walks by $z(W)$ and use
+$\mathrm{sign}(W)=(-1)^{s\cdot z(W)}$. For even $\ell$ only classes with
+$|z|$ even occur, by the congruence above.
+\end{proof}
+
+\begin{corollary}\label{cor:evenchar}
+$\rhomax(A_\sigma)$ is a function of the restriction of the character
+$z\mapsto(-1)^{s\cdot z}$ to $\Ze$. In particular
+$\rhomax(A_{-\sigma})=\rhomax(A_\sigma)$, and for non-bipartite $G$ the
+map from switching classes to $\rhomax$-relevant data is $2$-to-$1$: at
+most $2^{m-n}$ values of $\rhomax$ occur among the $2^{m-n+1}$ classes.
+\end{corollary}
+
+\begin{proof}
+$\rhomax(A_\sigma)=\lim_{k\to\infty}\tr(A_\sigma^{2k})^{1/2k}$ since
+$\rhomax^{2k}\le\tr(A_\sigma^{2k})\le n\rhomax^{2k}$, and by
+Lemma~\ref{lem:parity} every even trace depends on $s$ only through
+$s|_{\Ze}$. Negating $\sigma$ adds $|z|\bmod 2$ to $s\cdot z$, which
+vanishes on $\Ze$.
+\end{proof}
+
+\begin{corollary}[Interference accounting]\label{cor:interference}
+Let $C$ be a cycle of $G$.
+If $|C|$ is even, the class $z=\chi_C$ contributes to even traces with
+the sign $(-1)^{s\cdot\chi_C}$ of $C$ itself (first order). If $|C|$ is
+odd, then $\chi_C\notin\Ze$ and $C$ enters even traces only through
+combined classes; the lowest-order such classes are
+$z=\chi_{C_1}+\chi_{C_2}$ for pairs of odd cycles, contributing with sign
+equal to the \emph{product} of the two cycle signs.
+\end{corollary}
+
+Corollary~\ref{cor:interference} identifies the sign structure but not
+the magnitudes $N_\ell(z)$, so it does not by itself prove monotonicity
+statements. It does, however, explain two robust empirical phenomena
+(\S\ref{sec:experiments}): making all short \emph{even} cycles unbalanced
+places a deterministic $(-1)$ on their first-order terms, while making
+all short \emph{odd} cycles unbalanced makes every odd-pair term
+$(+1)(+1)$ or $(-1)(-1)$, i.e.\ sign-definite \emph{positive},
+eliminating cancellation; and indeed exhaustive optima place roughly half
+of all triangles unbalanced, while forcing all triangles unbalanced
+raises $\rhomax$ above the random-signing mean.
+
+\section{An $\F_2$ obstruction and the parameter $\beta_L$}
+
+Fix $L$ and consider the linear system over $\F_2$
+\begin{equation}\label{eq:sys}
+s\cdot\chi_C=1\qquad\text{for every even cycle $C$ of length}\le L .
+\end{equation}
+
+\begin{lemma}[$K_4$ obstruction]\label{lem:k4}
+If $G$ contains $K_4$ as a subgraph, then the system \eqref{eq:sys} with
+$L\ge4$ is inconsistent: no signing of $G$ makes all quadrilaterals
+unbalanced.
+\end{lemma}
+
+\begin{proof}
+Let $\{a,b,c,d\}$ span a $K_4$ and let $C_1,C_2,C_3$ be its three
+$4$-cycles. Every edge of the $K_4$ lies in exactly two of them, so
+$\chi_{C_1}+\chi_{C_2}+\chi_{C_3}=0$ in $\F_2^E$, whence
+$s\cdot\chi_{C_1}+s\cdot\chi_{C_2}+s\cdot\chi_{C_3}=0$ for every $s$,
+while \eqref{eq:sys} demands the sum be $1+1+1=1$.
+\end{proof}
+
+More generally, any odd-cardinality dependent family of even short
+cycles blocks \eqref{eq:sys}. Define
+\[
+\beta_L(G)\;=\;\frac{1}{\#\{\text{even cycles}\le L\}}\;
+\max_{s\in\F_2^E}\#\{\text{even cycles }C,\ |C|\le L:\ s\cdot\chi_C=1\},
+\]
+the maximum simultaneously-unbalanceable fraction. Every explicit signing certifies a lower bound on $\beta_L$, and
+$\beta_L\ge\tfrac12$ always, by averaging over uniform signings; row
+reduction produces the affine solution family of a consistent
+subsystem, whose size is a lower bound depending on the elimination
+order. Computing $\beta_L$ exactly is MAX-XOR-SAT, NP-hard in general
+\cite{hastad01}. Our data
+(\S\ref{sec:experiments}) suggest $\beta_L$ as the parameter governing
+the defect $\min_\sigma\rhomax(A_\sigma)-2\sqrt{d-1}$ on cycle-dense
+instances.
+
+\section{The hypercube: an exact certificate}
+
+\begin{proposition}\label{prop:cube}
+On $Q_n$ the system \eqref{eq:sys} with $L=4$ is consistent, and
+\emph{every} solution $\sigma$ satisfies $A_\sigma^2=nI$; consequently
+$\rhomax(A_\sigma)=\sqrt n$ for the entire affine solution family.
+\end{proposition}
+
+\begin{proof}
+Consistency is witnessed by Huang's signing \cite{huang19}. Let $\sigma$
+be any solution. $Q_n$ is triangle-free, so
+$(A_\sigma^2)_{uv}=0$ for adjacent $u,v$. If $u\ne v$ are at distance
+$2$ they have exactly two common neighbours $w,w'$, and
+$u\,w\,v\,w'$ is a $4$-cycle; unbalancedness gives
+$\sigma_{uw}\sigma_{wv}=-\sigma_{uw'}\sigma_{w'v}$, so the two terms of
+$(A_\sigma^2)_{uv}$ cancel. Pairs at distance $\ge3$ contribute nothing,
+and the diagonal equals the degree $n$.
+\end{proof}
+
+This proves the zero variance of $\rhomax$ observed across sampled solutions on $Q_5,Q_6$ (all at $\sqrt5,\sqrt6$ exactly, against a Kesten
+floor of $4$ and $2\sqrt5$): on $Q_n$ the local $\F_2$ condition is an
+exact spectral certificate, far below $2\sqrt{d-1}$. It also isolates
+what is special: the certificate needs \emph{every} $2$-path to be
+completed by exactly one $4$-cycle. Graphs with this property are
+covered by the two-eigenvalue framework of signed covers; the general
+question is how much of the cancellation survives when only a
+$\beta_L$-fraction of quadrilaterals can be unbalanced.
+
+
+\section{Failure of two-sided interlacing for $A_\sigma^2$}
+
+By Godsil--Gutman \cite{godsilgutman81},
+$\mathbb{E}_\sigma\det(xI-A_\sigma)=\mu_G(x)$, the matching polynomial,
+which is real-rooted with roots in $[-2\sqrt{d-1},2\sqrt{d-1}]$
+\cite{heilmannlieb72}; this underlies \cite{mss15}. A natural two-sided
+analogue would take
+$q_G(x):=\mathbb{E}_\sigma\det\!\big(xI-A_\sigma^2\big)$ and hope for
+real-rootedness plus an interlacing family, which would give some
+$\sigma$ with $\rhomax(A_\sigma)^2\le\operatorname{maxroot}(q_G)$.
+
+\begin{remark}\label{rem:qG}
+$q_G$ is not real-rooted in general. For $G=C_4$ the two switching
+classes have $A_\sigma^2$-spectra $\{4,4,0,0\}$ and $\{2,2,2,2\}$, so
+\[
+q_{C_4}(x)=\tfrac12\big[x^2(x-4)^2+(x-2)^4\big]
+=x^4-8x^3+20x^2-16x+8=(x^2-4x+2)^2+4,
+\]
+which has no real roots at all. Exhaustive computation over all
+connected regular graphs on at most $7$ vertices, plus Petersen, $Q_3$
+and $K_{3,3}$, shows real-rootedness fails for every instance except the odd cycles
+(where $A_\sigma^2$ is signing-independent) and, curiously, $K_4$:
+$q_{K_4}=x^4-12x^3+42x^2-52x+21$ is real-rooted despite its three
+quadrilaterals, so containing an even cycle is not the criterion, and
+characterizing the graphs with real-rooted $q_G$ is open. In all
+computed cases every complex root satisfied
+$\operatorname{Re}\le4(d-1)$.
+\end{remark}
+
+The even-subgraph corrections that cancel in
+$\mathbb{E}\det(xI-A_\sigma)$ survive squaring; this is the concrete
+obstruction to extending the interlacing method two-sidedly over the
+plain signing family, and delimits where any improvement of
+\cite{xuzhang26} must diverge from it.
+
+\section{Computational evidence}\label{sec:experiments}
+
+We summarize the computations (code in \texttt{signed\_spectra.py};
+switching classes enumerated exactly as co-tree sign patterns).
+
+\emph{Defect atlas.} For every connected regular graph on at most $7$
+vertices and for Petersen, $Q_3$, $Q_4$, Heawood, M\"obius--Kantor and
+circulants $C_n(1,2)$, the exact minimum of $\rhomax$ over all switching
+classes is at most $2\sqrt{d-1}$, usually strictly below
+($K_6$: $\sqrt5\approx2.236$ against $3.464$, attained by a conference
+signing; octahedron: $2.0$). Among the non-cycle instances, $75$--$97\%$ of switching classes lie
+strictly below the floor; for the $2$-regular cycles the fraction is
+$0$ or $\tfrac12$, the floor being attained rather than beaten. The exhaustive optimum on $Q_4$ is
+Huang's signing. Across all optima, quadrilaterals are unbalanced at
+rate $\approx1$, triangles at rate $\approx\tfrac12$, consistent with
+Corollary~\ref{cor:interference}.
+
+\emph{The even-cycle rule at scale.} Solving \eqref{eq:sys} and sampling
+the affine family: on $Q_5,Q_6$ all constraints are satisfiable and
+$\rhomax=\sqrt n$ exactly (Proposition~\ref{prop:cube}); on $C_n(1,2)$ with $n$ even the
+quadrilateral system is fully satisfiable and the family sits at
+$\rhomax\le2\sqrt2\approx2.83$ against a floor of $3.46$ --- an exact evaluation deferred to the companion note
+\cite{companion} --- and undercutting fairly seeded local search
+($2.790$ against $2.856$ for best-of-$60$ random draws plus local
+search, on $C_{30}(1,2)$) at negligible cost. Forcing triangles
+unbalanced instead \emph{raises} $\rhomax$ to $3.95$, above the
+random-signing mean $3.44$. On a locally tree-like control (random
+cubic, $n=60$) all methods land within $0.2$ of the Kesten floor and
+none separates. On $K_{12}$ the system is inconsistent outright (Lemma~\ref{lem:k4});
+the maximal simultaneously-unbalanceable fraction satisfies
+$\beta_4\ge\tfrac12$ for every graph (average over uniform signings)
+and $\beta_4\ge0.545$ here by local search, and the rule's collapse on
+dense cliques places them in Seidel-matrix territory.
+
+\emph{Variance onset.} On symmetry-free instances (random $2$-lift
+towers of $Q_3$ and $K_4$, planted-quadrilateral random $4$-regular
+graphs) we sampled the solution family of \eqref{eq:sys} alongside
+uniformly random signings. The deterministic particular solution
+produced by row reduction is a strong upward outlier within the family
+($12$--$34$ standard deviations above the sampled mean on towers,
+drifting to floor $+0.15$ at $n=1024$) and must be excluded from
+dispersion estimates; an earlier draft of this work reported
+family-to-random dispersion ratios inflated by this outlier. With it
+excluded, family and random dispersions are comparable on towers
+(ratios $0.79$--$1.21$ across $n\in\{256,512,1024\}$ and all seeds
+tested): on these dilute instances the constraint system pins a
+vanishing fraction of the cycle space ($8$ constraints against $1537$
+dimensions at $n=1024$), and conditioning on the short-even signature
+leaves essentially the fluctuation of a uniform signing. The family
+minimum over $200$ sampled solutions still tracks the
+Alon--Boppana-forced profile (floor $-0.02$ at $n=1024$). The family's
+advantage over uniform signings is a cycle-density phenomenon: on
+planted-quadrilateral instances the family minimum beats the random
+minimum by $0.09$--$0.23$ at equal sample sizes across every size and
+seed tested, and on circulants random signings concentrate above the
+Kesten floor from $n\approx480$ while the family sits at $2\sqrt2$ and
+below. The exact flatness on
+$Q_n$ is explained by Proposition~\ref{prop:cube}.
+
+\emph{Matched-budget baselines, ablation, and generator control.} At
+an equal evaluation budget ($2000$ spectral-radius evaluations per
+strategy per instance, $20$ instances per set, paired $95\%$
+$t$-intervals, deterministic seeds; \texttt{campaign.py}): on
+planted-quadrilateral $4$-regular graphs ($n=64$) the family's mean gap
+to the floor is $-0.351\pm0.008$, beating uniform random signings by
+$+0.094\pm0.011$, simulated annealing by $+0.053\pm0.010$, and ---
+decisively for attribution --- an equal number of uniformly
+\emph{random} affine $\mathbb F_2$ constraints of the same codimension
+by $+0.098\pm0.010$: the effect is parity, not conditioning. (An
+earlier wall-clock budgeting favoured the search heuristics through the
+family's per-draw solve overhead; the evaluation budget removes both
+that bias and the hardware dependence.) A conditioned-uniform control
+--- symmetric double-swap MCMC restricted to the same
+quadrilateral-count band --- reproduces the planted results
+($-0.340\pm0.011$, paired deltas agreeing within intervals), excluding
+generator bias. Tabu search is the one competitive baseline,
+statistically indistinguishable from the family on the generic sets
+($-0.003\pm0.013$, $+0.000\pm0.018$): notable, since the family reaches
+parity with a tuned search while performing no search at all, and
+family-seeded local search beats fairly seeded random local search at
+equal draws, as measured above. On circulants the family dominates
+every arm outright ($+0.17$ to $+0.63$), consistent with its containing
+the conjecturally optimal class of the companion note.
+
+\section{The kernel-averaged trace}\label{sec:kernel}
+
+Fix a consistent system \eqref{eq:sys}, let
+$W=\operatorname{span}\{\chi_C\}\subseteq\Ze$ be the span of its
+constraint cycles, and let $\mathcal F$ be its family of switching
+classes.
+
+\begin{proposition}[Master identity]\label{prop:master}
+The map $\pi\colon W\to\F_2$,
+$\pi\big(\sum_{C\in S}\chi_C\big)=|S|\bmod2$, is a well-defined linear
+form, and for every even $\ell$,
+\[
+\mathbb E_{\sigma\in\mathcal F}\,\tr\!\big(A_\sigma^{\ell}\big)
+\;=\;\sum_{z\in W}(-1)^{\pi(z)}\,N_\ell(z).
+\]
+\end{proposition}
+
+\begin{proof}
+Consistency means every dependency $\sum_{C\in S}\chi_C=0$ has $|S|$
+even, so $\pi$ is well defined; linearity follows from
+$|S|+|S'|\equiv|S\triangle S'|\pmod2$. Identify switching classes with
+$\operatorname{Hom}(Z(G),\F_2)$; then
+$\mathcal F=\varphi_0+\operatorname{Ann}(W)$ and $\varphi|_W=\pi$ for
+every $\varphi\in\mathcal F$. For $z\in Z(G)$ the average
+$\mathbb E_{\psi\in\operatorname{Ann}(W)}(-1)^{\psi(z)}$ equals $1$ if
+$z\in(\operatorname{Ann}W)^{\perp}=W$ and $0$ otherwise. Averaging the
+expansion of Lemma~\ref{lem:parity} term by term gives the claim; note
+$W\subseteq\Ze$ since the constraint cycles are even.
+\end{proof}
+
+Walks whose wrap parity touches any cycle outside $W$ are annihilated;
+a single constraint cycle enters with $-1$, a pair with $+1$, and so on.
+
+\begin{corollary}\label{cor:certificate}
+For every $k$,
+\[
+\min_{\sigma\in\mathcal F}\rhomax(A_\sigma)\;\le\;
+R_{\mathcal F}(k):=\Big(\sum_{z\in W}(-1)^{\pi(z)}N_{2k}(z)\Big)^{1/2k}.
+\]
+By contrast the average over all signings retains only $z=0$:
+$\mathbb E_\sigma\tr(A_\sigma^{2k})=N_{2k}(0)\ge n\,t_{2k}(d)$, where
+$t_{2k}(d)$ counts closed walks at the root of the infinite $d$-regular
+tree; indeed every such tree walk crosses each tree edge an even number
+of times and projects, injectively by unique lifting, to a closed walk
+in $G$ with all edge multiplicities even. Hence the uniform average can
+never certify a spectral radius below the Kesten profile, while
+$R_{\mathcal F}(k)$ can, if and only if the signed sum over
+$W\setminus\{0\}$ is negative enough to consume both the even-wrap
+excess $N_{2k}(0)-n\,t_{2k}(d)$ and part of the tree term.
+\end{corollary}
+
+\begin{corollary}[Confined mass]\label{cor:balanced}
+The homogeneous family $\operatorname{Ann}(W)$ --- all constraint cycles
+\emph{balanced} --- measures the total parity-confined walk mass:
+\[
+\mathbb E_{\psi\in\operatorname{Ann}(W)}\,\tr\!\big(A_\psi^{2k}\big)
+=\sum_{z\in W}N_{2k}(z).
+\]
+This is the same annihilator computation with $\varphi_0=0$, so every
+$z\in W$ enters with sign $+1$; it makes the confined mass, and hence
+Question~\ref{q:confined} below, directly measurable by sampling
+eigenvalues.
+\end{corollary}
+
+Numerically the mechanism is already decisive at $k=40$ with $400$
+sampled family members ($n=128$). On a random $2$-lift tower of $K_4$
+($d=3$, Kesten floor $2\sqrt2\approx2.828$):
+$R_{\mathcal F}(40)\approx2.769$ against
+$R_{\mathrm{all}}(40)\approx2.846$ and tree rate $2.839$ --- the
+kernel-averaged trace alone certifies a sub-Kesten signing on a
+symmetry-free instance, which Corollary~\ref{cor:certificate} shows the
+uniform average can never do. On a planted-quadrilateral $4$-regular graph ($37$ of $41$
+quadrilateral constraints in a greedy consistent subsystem, floor
+$3.464$):
+$R_{\mathcal F}(40)\approx3.327$. On $C_{60}(1,2)$ the family average is
+dominated by its $2\sqrt2$-class, $R_{\mathcal F}(40)\approx2.872$,
+while $R_{\mathrm{all}}$ stalls near $3.68$, above the tree rate, as the
+theory demands.
+
+Measuring all three averages against the tree profile $n\,t_{2k}(d)$
+separates the confined masses. On random $2$-lift towers the number of
+short cycles stays bounded as $n$ grows, so the confined mass dilutes
+and the instances drift toward the bicycle-free regime; the demanding
+test is constant local density. On planted-quadrilateral $4$-regular
+graphs at fixed density $\tfrac12$ quadrilateral per vertex,
+$n\in\{128,256,512\}$, $k=30$: the ordering
+$R_{\mathcal F}<R_{\mathrm{all}}\approx R_{\mathrm{tree}}<
+R_{\mathrm{bal}}$ holds throughout; the confined-rate excess
+$R_{\mathrm{bal}}-R_{\mathrm{all}}\approx0.12$--$0.15$ is
+$n$-independent; the confined-mass ratio
+$\mathbb E_{\mathrm{bal}}/\mathbb E_{\mathrm{all}}$ remains $O(1)$ in
+$n$ at fixed $k$; and
+$\mathbb E_{\mathcal F}\tr(A^{2k})/(n\,t_{2k})\approx0.08$--$0.11$,
+below one with an $n$-stable margin --- the parity-corrected average
+beats the tree profile itself. These are precisely the behaviours the
+counting question below predicts, with rate excess $\delta\approx0.04$
+at this density.
+
+\section{A kernel-averaged $L$-function}\label{sec:zeta}
+
+By Bass's theorem \cite{bass92}, for any signing
+$\det(I-uB_\sigma)=\prod_{p}\big(1-\sigma(p)u^{|p|}\big)$, the product
+running over primes (primitive cyclic classes of closed non-backtracking
+walks), where $\sigma(p)=(-1)^{\varphi(z(p))}$ and $z(p)\in Z(G)$ is the
+edge-multiplicity parity vector of $p$. Averaging over the family
+diagonalizes this product.
+
+\begin{proposition}[Kernel-averaged $L$-identity]\label{prop:Lident}
+With $W$, $\pi$, $\mathcal F$ as above, $\varepsilon_p=(-1)^{\pi(z(p))}$,
+and $B$ the \emph{unsigned} non-backtracking operator, for
+$|u|<\tfrac1{d-1}$,
+\[
+\mathbb E_{\sigma\in\mathcal F}\,\log\det(I-uB_\sigma)
+=\tfrac12\log\det(I-u^2B)
+-\tfrac12\!\!\sum_{p\,:\,z(p)\in W}\!\!
+\log\frac{1+\varepsilon_pu^{|p|}}{1-\varepsilon_pu^{|p|}}\,.
+\]
+\end{proposition}
+
+\begin{proof}
+As in Proposition~\ref{prop:master}, $\varphi(z)$ is frozen at $\pi(z)$
+over $\mathcal F$ when $z\in W$ and is a fair coin otherwise. Hence
+$\mathbb E\log(1-\sigma(p)u^{|p|})$ equals
+$\log(1-\varepsilon_pu^{|p|})$ for parity-confined primes and
+$\tfrac12\log(1-u^{2|p|})$ for the rest. Collecting the coin factor over
+\emph{all} primes gives
+$\tfrac12\log\prod_p(1-(u^2)^{|p|})=\tfrac12\log\det(I-u^2B)$, and the
+per-prime correction for confined primes is
+$\log(1-\varepsilon u^{\ell})-\tfrac12\log(1-u^{2\ell})
+=\tfrac12\log\frac{1-\varepsilon u^{\ell}}{1+\varepsilon u^{\ell}}$.
+Absolute convergence for $|u|(d-1)<1$ follows from
+$\#\{p:|p|=\ell\}\le\tfrac{2m}{\ell}(d-1)^{\ell}$.
+\end{proof}
+
+Both sides transfer to the adjacency side member-wise via
+$\det(I-uB_\sigma)=(1-u^2)^{m-n}\det(I-uA_\sigma+u^2(d-1)I)$. The
+identity was verified exactly on the prism ($\mathcal F$ of size $2$,
+$W$ spanned by the three quadrilaterals): the coefficient form
+$\mathbb E_{\mathcal F}\tr B_\sigma^k$ matches the prime decomposition
+for all $k\le14$ to machine precision, and the displayed identity holds
+to $8$ digits at $u=0.2$ under truncation at $|p|\le14$.
+
+The structural content: $\tfrac12\log\det(I-u^2B)$ is analytic exactly
+in $|u|<(d-1)^{-1/2}$, the Ramanujan radius --- \emph{primes whose
+parity escapes $W$ contribute the Ramanujan rate automatically, and the
+entire deviation of the averaged $L$-function from that rate is carried
+by parity-confined primes.} At the level of the averaged $L$-function, the sign problem has
+become a counting problem. We emphasize the scope of the identity: the
+domain of analyticity of $\mathbb E\log\det$ is governed by the worst
+member of $\mathcal F$, so it does not by itself bound
+$\min_{\sigma\in\mathcal F}\rho$; the quantitative route of this
+paper is Corollary~\ref{cor:certificate}, and the identity's role is
+to explain the mechanism and to isolate Question~\ref{q:confined}.
+
+\begin{question}[Confined-prime counting]\label{q:confined}
+For which graph sequences does
+$\#\{p:|p|=\ell,\ z(p)\in W\}\le C\,(\sqrt{d-1}+\delta)^{\ell}$ hold?
+Parity confinement means the odd-multiplicity edge set of $p$ is a sum
+of short even cycles; the extreme case $z(p)=0$ (totally even primes)
+counts non-backtracking closed walks retracing every edge evenly, which
+grow at rate $\sqrt{d-1}$, and each nonzero $z\in W$ should contribute a
+comparable rate with an exponential penalty in $|z|$. Caution from the
+prism: on graphs so small that $W$ nearly fills the cycle space,
+confinement is no restriction (measured rate $\approx1.84$ against
+$\sqrt2\approx1.41$ at $d=3$); the question is asymptotic, with
+$\dim W$ per ball bounded while $\dim Z(G)\to\infty$.
+\end{question}
+
+\section{The $z=0$ slice: totally even walks}\label{sec:even}
+
+Sub-question of Question~\ref{q:confined} at $z=0$: count closed
+non-backtracking walks all of whose edge multiplicities are even
+(``totally even'' walks). The lower bound holds at the conjectured rate
+unconditionally; the upper bound fails without a hypothesis on dense
+cores, and the failure mechanism is instructive.
+
+\begin{proposition}[Slice identity and doubling]\label{prop:slice}
+Let $\mathrm{Ev}_\ell$ denote the number of totally even closed
+non-backtracking walks of length $\ell$ in $G$. Then
+$\mathrm{Ev}_\ell=\mathbb E_{\sigma}\,\tr(B_\sigma^{\ell})$, the average
+over all signings; and the doubling map $w\mapsto w^2$ injects closed
+non-backtracking walks of length $\ell/2$ into totally even walks of
+length $\ell$, so
+$\mathrm{Ev}_\ell\ge\tr(B^{\ell/2})$ and
+$\liminf_\ell \mathrm{Ev}_\ell^{1/\ell}\ge\rho(B)^{1/2}=\sqrt{d-1}$.
+\end{proposition}
+
+\begin{proof}
+$\tr(B_\sigma^\ell)$ is the signed count of closed non-backtracking
+walks, the sign being $\prod_e\sigma_e^{m_e(w)}$; averaging kills every
+walk with an odd multiplicity. If $w$ is cyclically non-backtracking
+then so is $w^2$ (the seam repeats a legal transition of $w$), its
+multiplicities double, and $w$ is recovered as the first half.
+\end{proof}
+
+\begin{proposition}[Dense trapping]\label{prop:trap}
+Let $d\ge4$ and suppose $G$ contains $K_d$ as a subgraph (realizable in
+connected $d$-regular graphs: two copies of $K_d$ joined by a perfect
+matching). Then there are $c_d>0$ and $\ell_0(d)$, independent of $G$
+and $n$, with $\mathrm{Ev}_\ell(G)\ge c_d\,(d-2)^{\ell}$ for all even
+$\ell\ge\ell_0$. Since $d-2>\sqrt{d-1}$ for every $d\ge4$, the confined
+mass exceeds the profile $n(\sqrt{d-1}\,)^{\ell}$ throughout
+$\ell\ge C_d\log n$.
+\end{proposition}
+
+\begin{proof}
+Totally even walks of the $K_d$ copy are totally even walks of $G$, and
+by Proposition~\ref{prop:slice} their number is
+$2^{-|E(K_d)|}\sum_{\sigma\in\{\pm1\}^{E(K_d)}}\tr(B_{K_d,\sigma}^\ell)$.
+The unsigned $B_{K_d}$ is irreducible and aperiodic with Perron value
+$d-2$; its remaining eigenvalues have modulus at most
+$\max(1,\sqrt{d-2})<d-2$ (Ihara--Bass from
+$\operatorname{spec}A(K_d)=\{d-1,(-1)^{d-1}\}$). By the equality case of
+Wielandt's theorem, a signed version satisfies
+$\rho(B_{K_d,\sigma})=\rho(B_{K_d})$ if and only if
+$B_{K_d,\sigma}=\pm D B_{K_d}D^{-1}$ for a diagonal $D$ with
+$|D|=I$, i.e.\ iff $\sigma$ is switching-equivalent to the all-plus or
+all-minus signing. Hence $\rho_2:=\max$ over the remaining classes is
+strictly below $d-2$, the two trivial classes contribute
+$\tr B^\ell+(-1)^\ell\tr B^\ell=2(d-2)^\ell(1+o(1))$ at even $\ell$, and
+the class average is at least
+$2^{-r}\big[2(d-2)^\ell(1-o(1))-2^{r}\,d(d-1)\rho_2^{\ell}\big]$ with
+$r=\binom d2-d+1$.
+\end{proof}
+
+\begin{remark}[Necessity of a core hypothesis]\label{rem:core}
+Since $0\in W$ always, Proposition~\ref{prop:trap} shows the bound of
+Question~\ref{q:confined} cannot hold unconditionally once
+$\ell\ge C_d\log n$: it forces the exclusion of $K_d$ --- for $d=4$
+the same $K_4$ as Lemma~\ref{lem:k4}, which thus obstructs the program
+twice. Any workable hypothesis must constrain the \emph{unsigned}
+local growth, that is, the closed-walk counts $c_H(t)$ of condition
+(ii) in the subcriticality definition of Section~\ref{sec:even}: the
+trapped mass of Proposition~\ref{prop:trap} is carried by the two
+$\pm$-trivial classes with only the constant discount
+$2^{-\binom d2+d-1}$, so a hypothesis exempting the trivial classes
+would be vacuous --- every non-$\pm$-trivial class of $K_4$ and of
+$K_5$ has $\rho(B_\sigma)$ equal to $\sqrt{d_H-1}$ exactly ($\sqrt2$
+and $\sqrt3$), so $K_4$ would satisfy such a hypothesis at $d=4$ while
+violating the conclusion. $K_d$ does violate condition (ii), since
+$c_{K_d}(t)$ grows at rate $d-2>\sqrt{d-1}$. On the Petersen graph
+every non-trivial class likewise sits at $\rho(B_\sigma)=\sqrt2$:
+every nontrivial signing of $K_4$ and of Petersen is exactly
+Ramanujan.
+\end{remark}
+
+The upper bound matching Proposition~\ref{prop:slice} holds in the
+dilute regime. Say $G$ is \emph{$(r_0,\delta)$-subcritical at scale
+$\ell$} if every connected subgraph $H$ of $G$ with minimum degree
+$\ge2$ and at most $\ell$ edges satisfies: (i) the cycle rank of $H$
+is at most $r_0$; and (ii) the number $c_H(t)$ of closed
+non-backtracking walks of length $t$ in $H$ obeys
+$c_H(t)\le 2|E(H)|\,(t+1)^{3r_0}(1+\delta)^{t}$ for all $t\le8\ell$.
+The notion is monotone --- subcriticality at scale $\ell$ implies it
+at every smaller scale --- and all subsequent hypotheses are stated
+through this single definition.
+Condition (ii) holds, for instance, whenever every thread of $H$ (a
+maximal path through degree-$2$ vertices) has length at least
+$\lambda$, with $1+\delta=(2r_0-1)^{1/\lambda}$: closed walks in $H$
+project to reduced cyclic words in a free group of rank $\le r_0$ whose
+generators cost at least $\lambda$ steps each.
+
+\begin{lemma}[Non-backtracking reachability]\label{lem:reach}
+Let $H$ be connected with minimum degree $\ge2$, $s$ edges, and not a
+cycle. Between any two directed edges of $H$ there is a
+non-backtracking path of length at most $4s$.
+\end{lemma}
+
+\begin{proof}
+The non-backtracking digraph of a connected graph with minimum degree
+$\ge2$ that is not a cycle is strongly connected \cite{ks00};
+concretely, a theta or dumbbell subgraph --- present because some
+vertex has degree $\ge3$ --- lets a walk reverse its direction of
+travel along any thread. A strongly connected digraph on the $2s$
+directed edges has diameter at most $2s-1\le4s$.
+\end{proof}
+
+\begin{proposition}[Even-walk upper bound, dilute regime]\label{prop:upper}
+If $G$ is $d$-regular and $(r_0,\delta)$-subcritical at scale $\ell$,
+then
+\[
+\mathrm{Ev}_\ell(G)\;\le\;
+nd\,(C\ell)^{\,3(r_0+1)^2}\,
+\Big((1+\delta)^{2(r_0+2)}\sqrt{d-1}\Big)^{\ell}
+\]
+for an absolute constant $C$. Combined with
+Proposition~\ref{prop:slice}, in this regime
+$\mathrm{Ev}_\ell=\big(\sqrt{d-1}\big)^{\ell(1+o(1))}$: the $z=0$ case
+of Question~\ref{q:confined} is settled.
+\end{proposition}
+
+\begin{proof}
+Fix the starting directed edge ($\le nd$ choices) and expose the walk
+step by step; let $S_i$ be the subgraph of edges used through step $i$
+and $S=S_{\ell}$ the support. Since multiplicities are even,
+$s:=|E(S)|\le\ell/2$; since a degree-$1$ vertex of $S$ would force a
+backtrack, $S$ has minimum degree $2$; by (i) its cycle rank $r$ is at
+most $r_0$.
+
+Call a step \emph{fresh} if it traverses an edge not in $S_{i-1}$,
+\emph{stale} otherwise. The key structural fact: after a fresh step
+into a previously unvisited vertex $v$, the only used edge at $v$ is
+the arrival edge, which is excluded by non-backtracking --- so every
+continuation is again fresh. Hence maximal fresh runs continue until
+they land on an already-visited vertex, i.e.\ each maximal fresh run is
+an open ear attached to the current support, and the number of fresh
+runs equals the number of ears, which is exactly the cycle rank:
+\emph{the walk performs precisely $r\le r_0$ fresh runs} (the first
+builds the initial cycle), interleaved with at most $r+1$ maximal stale
+segments.
+
+Encode the walk by: the start edge; the set of run-start times, at most
+$\binom{\ell}{r}\le\ell^{\,r_0}$ choices (run \emph{ends} are visible
+to a decoder who knows $G$ and the visited set: a run ends exactly when
+its landing vertex is old); the fresh-edge choices, at most $(d-1)^{s}$
+in total; and the stale segments. A stale segment of length $t$ is a
+non-backtracking path inside $S$, and by Lemma~\ref{lem:reach} any such
+path prolongs to a closed walk of length $\le t+4s$, so their number is
+at most $2s\cdot c_S(t+4s)\le 4s^2(t+4s+1)^{3r_0}(1+\delta)^{t+4s}$ by
+(ii) (if $S$ is a cycle the count is $1$). Multiplying over the
+$\le r_0+1$ segments with total stale length $\ell-s$ and collecting,
+\[
+\mathrm{Ev}_\ell\le nd\,\ell^{\,r_0}\!\!\sum_{s\le\ell/2}\!
+\big(4s^2(4\ell)^{3r_0}\big)^{r_0+1}
+(d-1)^{s}(1+\delta)^{(\ell-s)+4s(r_0+1)} .
+\]
+Every factor of the summand is nondecreasing in $s$, so it is maximized
+at $s=\ell/2$, where
+$(d-1)^{\ell/2}(1+\delta)^{\ell/2+2\ell(r_0+1)}\le
+\big((1+\delta)^{2(r_0+2)}\sqrt{d-1}\big)^{\ell}$; the polynomial
+prefactors collect into $(C\ell)^{3(r_0+1)^2}$.
+\end{proof}
+
+\begin{remark}[Scope]\label{rem:scope}
+Random $2$-lift towers are $(O(1),o(1))$-subcritical at scale
+$c\log n$ with high probability --- balls of that radius have bounded
+cycle rank and long threads --- and the measured
+$\mathbb E_\sigma[\tr B_\sigma^{\ell}]^{1/\ell}\approx1.53$ at
+$\ell=30$, $n=128$, $d=3$ against $\sqrt2$ is consistent with the
+proposition's $(1+\delta)$-corrected rate. Constant cycle density
+(quadrilaterals proportional to $n$) violates hypothesis (i): supports
+with $s$ edges can have rank $\Theta(\eta s)$. The run-schedule cost
+survives this --- $\binom{\ell}{r}\le(e\ell/r)^{r}=(1+o_\eta(1))^{\ell}$
+for $r\le\eta\ell$ --- so the sole obstruction to the constant-density
+extension is the stale-path entropy bound for unbounded-rank supports,
+which is an unsigned growth requirement in the spirit of condition
+(ii); Remark~\ref{rem:core} explains why any such bound must
+constrain the trivial classes. That extension is carried out below via
+Lemmas~\ref{lem:window} and~\ref{lem:rank}.
+\end{remark}
+
+\begin{remark}[Toward constant density: the critical gadget]\label{rem:gadget}
+At $d=3$ the candidate obstruction to the unbounded-rank entropy bound
+is a quadrilateral with exits at two opposite vertices: oscillation
+between its branch points along the two length-$2$ arcs would give
+path growth $2^{2/4}=\sqrt2=\sqrt{d-1}$, exactly critical.
+Non-backtracking forbids it: arriving along one short arc, a walk may
+not reverse into it, so bouncing between the two short arcs is
+deterministic, and branching entropy is carried only by the long arm.
+Exactly: on the theta graph $\Theta(2,2,\lambda)$ \emph{every}
+switching class satisfies $\rho(B_\sigma)\le\rho(B)=1+O(1/\lambda)$
+(measured $1.348, 1.268, 1.222, 1.190, 1.150$ for
+$\lambda=3,5,7,9,13$, all nontrivial classes strictly below), and a
+ring of four such quadrilaterals separated by $\lambda$-threads
+behaves identically ($\rho\le1.25$ at $\lambda=6$, rank $5$). The
+general principle: if every ball of radius $R$ contains at most one
+cycle, then at any branch vertex of any support at most one
+continuation returns within $2R$ steps --- two short returns would
+exhibit two cycles in one ball. The remaining entropy bound therefore
+takes the quantified form: paths in any support grow at rate
+$1+O(\log d/R)$; ranks obey $r\le C\ell/R$, keeping the run-schedule
+cost $\binom{\ell}{r}$ at $(1+o(1))^{\ell}$; and the per-segment
+polynomial factors force $R\ge C\log\log n/\delta$ --- the scale at
+which the bicycle-free hypothesis of \cite{mop20} reappears, now in
+service of the parity family rather than the uniform measure.
+\end{remark}
+
+The entropy half of that program is now a lemma.
+
+\begin{lemma}[Window path bound]\label{lem:window}
+Suppose every ball of radius $R$ in $G$ contains at most one cycle.
+Then for every subgraph $S\subseteq G$ with $s$ edges, every directed
+edge of $S$, and every $t\ge1$, the number of non-backtracking paths
+of length $t$ in $S$ from that edge is at most
+$\big(2s(R+3)\big)^{\lceil t/R\rceil}$; in particular the growth rate
+is $\exp\!\big(O(\log(sR)/R)\big)$.
+\end{lemma}
+
+\begin{proof}
+Cut the path into $\lceil t/R\rceil$ windows of at most $R$
+consecutive steps. A window starting at the vertex $w$ stays inside
+$B_R(w)$, so its segment is a non-backtracking path in
+$H_w:=S\cap B_R(w)$, a graph of cycle rank at most $1$. In a tree a
+non-backtracking walk never revisits a vertex --- a revisit would have
+to undo an edge crossing, and the first undoing step is a backtrack
+--- so it is the unique reduced path between its endpoints. In a
+unicyclic graph with cycle $C$, each component of the complement of
+$E(C)$ is a tree attached to $C$ at a single vertex; once a
+non-backtracking walk enters such a tree it can never return to the
+attachment vertex, and while on $C$ its rotational direction cannot
+reverse. A non-backtracking path therefore consists of a unique
+reduced tree path to an attachment vertex, unidirectional motion
+around $C$ with some winding number $w\le t/3$, and a unique reduced
+tree path to its final edge: it is determined by its endpoint directed
+edges, the direction, and $w$, giving at most $2(1+t/3)$ paths per
+endpoint pair (the entrywise count is at most $1+\lfloor t/\mathrm{girth}\rfloor$, numerically sharp). Each
+window therefore admits at most $4s(R/3+2)\le2s(R+3)$
+continuations given its starting edge, using $R\ge3$.
+\end{proof}
+
+The rate is sharp in the exponent. The \emph{tree-burst} gadget ---
+two depth-$D$ binary trees with roots and matched leaves joined by
+$\lambda$-threads, every cycle of length $\ge2\lambda+4$, hence
+bicycle-free at radius $\lambda$ --- has measured $\rho(B)$ tracking
+the burst rate $2^{D/(D+\lambda)}$: $(1.29,1.19,1.34,1.22,1.25)$
+against $(1.35,1.21,1.41,1.26,1.31)$ for
+$(D,\lambda)=(3,4),(3,8),(4,4),(4,8),(5,8)$. Since $D$ can reach
+$\log_2(s/\lambda)$, path growth $\exp(c\log s/R)$ is realized, and
+$R\ge C\log\ell/\delta$ is \emph{necessary} for a $(1+\delta)^t$
+bound, matching Lemma~\ref{lem:window}.
+
+\begin{lemma}[Rank of bicycle-free graphs]\label{lem:rank}
+There is an absolute constant $C$ such that every graph $H$ with
+$s\ge R\ge8$ edges and minimum degree $\ge2$ that is bicycle-free at
+radius $R$ satisfies
+$\operatorname{rank}(H)\le1+Cs\log s/R$.
+\end{lemma}
+
+\begin{proof}
+Call a cycle \emph{short} if its length is at most $2R$. Two short
+cycles cannot share a vertex, since both would lie in that vertex's
+$R$-ball; hence short cycles are pairwise vertex- and edge-disjoint,
+and there are at most $s/R$ of them with length in $(R,2R]$. Two
+disjoint short cycles of length $\le R$ at distance $\rho$ have
+$\rho>R/2$: otherwise, taking $v$ on one nearest the other, every
+vertex of both lies within $\rho+R/2\le R$ of $v$, giving a rank-$2$
+ball. Their $R/4$-balls are then disjoint, and each contains at least
+$R/4$ edges by minimum degree $2$, so there are at most $4s/R$ of
+them. Delete one edge from each short cycle: $D\le5s/R$ deletions
+destroy every short cycle and create none, so the result $H'$ has
+girth exceeding $2R$. Pass to the $2$-core of each component of $H'$;
+this changes neither rank nor girth. By the Moore bound for irregular
+graphs \cite{ahl02}, a graph with minimum degree $\ge2$, girth
+$\ge2R+1$, and average degree $\bar d_i$ on $n_i$ vertices satisfies
+$n_i\ge(\bar d_i-1)^{R}$ for either girth parity, so
+$\bar d_i-1\le n_i^{1/R}$, whence
+$\operatorname{rank}(H')\le\sum_i\big[\tfrac{n_i}2\big(n_i^{1/R}-1\big)+1\big]$.
+If $\log s\le R$ this is at most $Cs\log s/R+D+1$, using
+$e^{x}-1\le2x$ on $[0,1]$, $\sum_in_i\le s$, and
+$\#\mathrm{components}\le D+1$; if $\log s>R$ the claimed bound
+exceeds $s$ and is trivial. Finally
+$\operatorname{rank}(H)\le\operatorname{rank}(H')+D$.
+\end{proof}
+
+The $\log s$ factor is necessary, and the earlier guess
+$\operatorname{rank}\le1+Cs/R$ is false for every constant $C$: a
+graph of girth $\ge2R+2$ has every $R$-ball a tree, hence is
+bicycle-free at radius $R$, while its rank density is $1-2/\bar d$.
+The Tutte--Coxeter $(3,8)$-cage is bicycle-free at radius $3$ with
+$(\operatorname{rank}-1)/s=\tfrac13$, the girth-$12$ Tutte cage is
+bicycle-free at radius $5$ at the same $\tfrac13$, and
+generalized-polygon cages of degree $\bar d\sim s^{1/(R+1)}$ push the
+density toward $1$ (such cages exist for $R\in\{2,3,5\}$ by
+Feit--Higman; for other $R$, girth-$(2R+2)$ graphs of growing degree
+serve the same purpose). (Stochastic search over bicycle-free
+graphs found exactly this ceiling, $0.344$ at $R=3$ in small sizes,
+after first refuting the linear conjecture's banana extremal at
+density $1/(R+1)$.) At the operating scale the lemma gives precisely
+what is needed: for $s\le\ell$ and $R\ge C\log\ell/\delta$,
+$\operatorname{rank}\le1+\delta\ell$.
+
+\begin{proposition}[$\varepsilon$-theorem, bicycle-free regime]\label{thm:bf}
+Fix $\delta\in(0,1)$, $L$, $\Lambda$, and let $G$ be $d$-regular on
+$n$ vertices, bicycle-free at radius
+$R\ge C\log\log n/\delta$, with $W$ spanned by any consistent family
+of even cycles of length $\le L$ and $\Lambda_W\le\Lambda$. Then some
+signing in the solution family satisfies
+$\rho(A_\sigma)\le2\sqrt{d-1}\,(1+C\delta\log(1/\delta))(1+o(1))$.
+\end{proposition}
+
+\begin{proof}
+Set $\ell=2\lceil\log n\rceil$ and $k=\lceil\log n\rceil$; we may
+assume $R\le\ell$, since otherwise every support below is bicycle-free
+at radius exceeding its size and Proposition~\ref{thm:eps} applies
+with $r_0=1$. Fix $j\le2\ell$ and bound
+$\sum_{z\in W}N^{\mathrm{nb}}_j(z)$ by rerunning
+Propositions~\ref{prop:upper} and~\ref{prop:confined}. A counted walk
+has support $S$ with $s\le(j+\Lambda)/2\le2\ell$ edges and minimum
+degree $2$; by Lemma~\ref{lem:rank}, its cycle rank satisfies
+$r\le1+Cs\log(2\ell)/R\le1+\delta(j+\Lambda)$ once
+$R\ge C'\log\log n/\delta$. The fresh-run identity is untouched: the
+walk performs exactly $r$ fresh runs, so the run-start schedule costs
+$\binom{j}{r}\le(ej/r)^{r}\le(e/\delta)^{\delta(j+\Lambda)+1}$, and
+the fresh choices cost $(d-1)^{s}\le(d-1)^{\Lambda/2}(d-1)^{j/2}$.
+Each of the at most $r+1$ stale segments is a non-backtracking path in
+$S$, and Lemma~\ref{lem:window} bounds its continuations by
+$(2s(R+3))^{\lceil t_i/R\rceil}$ with $\sum_it_i\le j$, for a total
+window exponent at most $j/R+\delta(j+\Lambda)+3$. Hence
+\[
+\sum_{z\in W}N^{\mathrm{nb}}_j(z)\;\le\;
+K\,\hat\rho^{\,j},\qquad
+\hat\rho:=(1+\eta)\sqrt{d-1},
+\]
+where $K\le nd\,(d-1)^{\Lambda/2}(e/\delta)^{\delta\Lambda+1}
+\big(4\ell(R+3)\big)^{\delta\Lambda+3}$ collects all factors not
+exponential in $j$, and
+\[
+\log(1+\eta)\;=\;\delta\log(e/\delta)
++\Big(\tfrac1R+\delta\Big)\log\!\big(4\ell(R+3)\big)
+\;\le\;C\delta\log(1/\delta)
+\]
+at $R\ge C'\log\log n/\delta$ and $R\le\ell$. The peeling and transfer
+of Lemma~\ref{lem:transfer} and the assembly in the proof of
+Proposition~\ref{thm:eps} now apply verbatim with this $K$ and
+$\hat\rho$, giving
+$\mathbb E_{\mathcal F}\tr A_\sigma^{2k}\le
+C''\,K\,(Ck)^{2}\big((1+\eta)^{2}\,2\sqrt{d-1}\big)^{2k}$, and
+Corollary~\ref{cor:certificate} at $k=\lceil\log n\rceil$ yields
+$\min_{\sigma\in\mathcal F}\rho(A_\sigma)\le
+2\sqrt{d-1}\,(1+\eta)^{2}\big(C''K(Ck)^{2}\big)^{1/2k}$, which is the
+claim.
+\end{proof}
+
+The extension from $z=0$ to all of $W$ costs only a constant. Set
+$\Lambda_W:=\max_{z\in W}|z|\le L\dim W$.
+
+\begin{proposition}[Confined-walk upper bound]\label{prop:confined}
+Assume $\Lambda_W\le\ell$ and that $G$ is
+$(r_0,\delta)$-subcritical at scale $\ell$. Then, with
+$N^{\mathrm{nb}}_\ell(z)$ the number of closed non-backtracking walks
+of length $\ell$ and parity $z$,
+\[
+\sum_{z\in W}N^{\mathrm{nb}}_\ell(z)\;\le\;
+C_{r_0,\delta,\Lambda_W,d}\;n\,(C\ell)^{3(r_0+1)^2}
+\big((1+\delta)^{2(r_0+2)}\sqrt{d-1}\big)^{\ell}.
+\]
+\end{proposition}
+
+\begin{proof}
+A counted walk has $|z(w)|\le\Lambda_W$; edges of $z(w)$ carry odd
+multiplicity $\ge1$ and all others even multiplicity $\ge2$, so its
+support has $s\le(\ell+\Lambda_W)/2$ edges and, as before, minimum
+degree $2$. The proof of Proposition~\ref{prop:upper} used evenness
+only through the bound on $s$; it applies verbatim, with
+$(d-1)^{s}\le(d-1)^{\Lambda_W/2}(d-1)^{\ell/2}$ and the corresponding
+constant absorbed into $C_{r_0,\delta,\Lambda_W,d}$.
+\end{proof}
+
+To reach the adjacency side, we use the classical linearization (see
+e.g.\ \cite{bordenave20}). Define $\mathsf A_0=I$,
+$\mathsf A_1=A_\sigma$, $\mathsf A_2=A_\sigma^2-dI$, and
+$\mathsf A_{j+1}=A_\sigma\mathsf A_j-(d-1)\mathsf A_{j-1}$ for
+$j\ge2$; then $(\mathsf A_j)_{uv}$ is the signed count of
+non-backtracking walks $u\to v$ of length $j$, and inverting the
+recursion,
+$A_\sigma^{m}=\sum_{j\le m}\alpha_{m,j}\mathsf A_j$ where
+$\alpha_{m,j}\ge0$ counts weight-$(d-1)$ downward-step walks on
+$\mathbb N$ from $0$ to $j$. Both identities and the envelope below
+were verified symbolically through $m=8$.
+
+\begin{lemma}[Transfer envelope and peeling]\label{lem:transfer}
+(i) $\sum_j\alpha_{m,j}(\sqrt{d-1})^{\,j}\le
+\tfrac{d}{d-1}(m+1)\,\big(2\sqrt{d-1}\big)^{m}$.
+(ii) Let $\widetilde N_j(z)$ count vertex-based non-backtracking closed
+walks (backtracking permitted at the wrap) of length $j$ and parity
+$z$. Then
+$\widetilde N_j(z)\le\sum_{p\ge0}d(d-1)^{p}\,
+N^{\mathrm{nb}}_{j-2p}(z)+d(d-1)^{j/2-1}\mathbf 1_{z=0}$.
+\end{lemma}
+
+\begin{proof}
+(i) Each $\mathbb N$-walk of length $m$ ending at $j$ has $(m-j)/2$
+down-steps, so $\alpha_{m,j}\le\binom{m}{(m+j)/2}(d-1)^{(m-j)/2}\cdot
+\tfrac d{d-1}\le\tfrac d{d-1}2^m(d-1)^{(m-j)/2}$; multiply by
+$(\sqrt{d-1})^j$ and sum. (ii) A vertex-based walk is either
+cyclically non-backtracking or of the form $e\cdot w'\cdot\bar e$ with
+$w'$ vertex-based of length $j-2$ at the head of $e$; peeling the
+pendant edge adds $2$ to the multiplicity of $e$, leaving the parity
+unchanged. Iterate: a pendant path of length $p$ costs at most
+$d(d-1)^{p-1}$ choices, and the residue is cyclically non-backtracking
+(or empty, forcing $z=0$).
+\end{proof}
+
+\begin{proposition}[$\varepsilon$-theorem, dilute regime]\label{thm:eps}
+Fix $r_0,\delta,L,\Lambda$ and let $G$ be $d$-regular on $n$
+vertices, $(r_0,\delta)$-subcritical at scale
+$\ell=2\lceil\log n\rceil$.
+Let $W$ be spanned by any consistent family of even cycles of length
+$\le L$ with $\Lambda_W\le\Lambda$ --- possibly $W=\{0\}$. Then some
+signing in the solution family $\mathcal F$ satisfies
+\[
+\rho(A_\sigma)\;\le\;
+2\sqrt{d-1}\;(1+\delta)^{4(r_0+2)}
+\Big(1+O_{r_0,\delta,\Lambda,d}\big(\tfrac{\log\log n}{\log n}\big)\Big).
+\]
+\end{proposition}
+
+\begin{proof}
+For $n$ large enough that $\Lambda\le\ell$,
+Proposition~\ref{prop:confined} applies at every length $j\le2k$ by
+monotonicity of the subcriticality notion. Write
+$\hat\rho=(1+\delta)^{2(r_0+2)}\sqrt{d-1}$ and let $K$ denote
+the prefactor of Proposition~\ref{prop:confined}. Since the recursion
+defining $\mathsf A_j$ preserves the signed-walk interpretation, the
+annihilator computation gives
+$\mathbb E_{\mathrm{Ann}(W)}\tr\mathsf A_j(A_\sigma)
+=\sum_{z\in W}\widetilde N_j(z)$. By
+Lemma~\ref{lem:transfer}(ii), Proposition~\ref{prop:confined}, and
+$\hat\rho^2\ge d-1$ (terms nonincreasing in $p$),
+$\sum_{z\in W}\widetilde N_j(z)\le(j+2)\,dK\hat\rho^{\,j}$. Hence with
+$k=\lceil\log n\rceil$,
+\[
+0\le\mathbb E_{\mathcal F}\tr A_\sigma^{2k}
+\le\mathbb E_{\mathrm{Ann}(W)}\tr A_\sigma^{2k}
+=\sum_j\alpha_{2k,j}\sum_{z\in W}\widetilde N_j(z)
+\le (2k+2)dK\sum_j\alpha_{2k,j}\hat\rho^{\,j},
+\]
+and by Lemma~\ref{lem:transfer}(i) applied after extracting
+$(1+\delta)^{2(r_0+2)j}\le(1+\delta)^{4(r_0+2)k}$, the right side is at
+most $C'\,n\,(Ck)^{3(r_0+1)^2+2}
+\big((1+\delta)^{4(r_0+2)}\,2\sqrt{d-1}\big)^{2k}$. Corollary
+\ref{cor:certificate} and $\big(n(Ck)^{c}\big)^{1/2k}
+=1+O(\log\log n/\log n)$ conclude.
+\end{proof}
+
+Taking $W=\{0\}$ recovers a near-Ramanujan statement for random
+signings of dilute graphs in the spirit of \cite{mop20}, from entirely
+different machinery; taking $W$ maximal uses the full parity family.
+Random $2$-lift towers satisfy the hypotheses with $r_0=O(1)$,
+$\delta=o(1)$, $\Lambda=O(1)$ with high probability, so the
+$\varepsilon$-version of the Bilu--Linial conjecture holds along them.
+
+\section{Outlook}
+
+The target is now a single inequality: show
+$R_{\mathcal F}(k)\le2\sqrt{d-1}+\varepsilon(d,\beta_L)$ at
+$k\asymp\log n$, i.e.\ that the single-cycle classes
+$-\sum_{C}N_{2k}(\chi_C)$ dominate the even-wrap excess
+$N_{2k}(0)-n\,t_{2k}(d)$ while the pair classes stay controlled. The
+structure of Proposition~\ref{prop:master} is that of an
+Ihara--Bass/cluster expansion in which the local factors of the
+constraint cycles appear with inverted sign; Proposition~\ref{prop:Lident}
+makes this exact, and isolates the analytic core of the program in
+Question~\ref{q:confined}, with the bicycle-free walk taxonomy of
+\cite{mop20} supplying the combinatorics
+and now entering with cancellation rather than by union bound. The variance-onset data locate the regime boundary: on dilute
+instances the family fluctuates like a uniform signing, and its
+measurable advantage is confined to cycle-dense instances ---
+precisely where the parity weights of Proposition~\ref{prop:master}
+act.
+
+\begin{thebibliography}{9}
+\bibitem{ahl02} N.~Alon, S.~Hoory, N.~Linial, \emph{The Moore bound
+for irregular graphs}, Graphs Combin.~18 (2002), 53--57.
+\bibitem{bass92} H.~Bass, \emph{The Ihara--Selberg zeta function of a
+tree lattice}, Internat.~J.~Math.~3 (1992), 717--797.
+\bibitem{bilulinial06} Y.~Bilu, N.~Linial,
+\emph{Lifts, discrepancy and nearly optimal spectral gap},
+Combinatorica 26 (2006), 495--519.
+\bibitem{companion} Author, \emph{Signed circulants at the Ramanujan
+bound}, companion manuscript.
+\bibitem{bordenave20} C.~Bordenave, \emph{A new proof of Friedman's
+second eigenvalue theorem and its extension to random lifts},
+Ann.~Sci.~\'Ec.~Norm.~Sup\'er.~53 (2020), 1393--1439.
+\bibitem{godsilgutman81} C.~D.~Godsil, I.~Gutman,
+\emph{On the matching polynomial of a graph}, in: Algebraic Methods in
+Graph Theory, 1981.
+\bibitem{hastad01} J.~H\aa stad, \emph{Some optimal inapproximability
+results}, J.~ACM 48 (2001), 798--859.
+\bibitem{heilmannlieb72} O.~J.~Heilmann, E.~H.~Lieb,
+\emph{Theory of monomer-dimer systems}, Comm.~Math.~Phys.~25 (1972),
+190--232.
+\bibitem{huang19} H.~Huang, \emph{Induced subgraphs of hypercubes and a
+proof of the Sensitivity Conjecture}, Ann.~of Math.~190 (2019), 949--955.
+\bibitem{ks00} M.~Kotani, T.~Sunada, \emph{Zeta functions of finite
+graphs}, J.~Math.~Sci.~Univ.~Tokyo 7 (2000), 7--25.
+\bibitem{mss15} A.~W.~Marcus, D.~A.~Spielman, N.~Srivastava,
+\emph{Interlacing families I: Bipartite Ramanujan graphs of all degrees},
+Ann.~of Math.~182 (2015), 307--325.
+\bibitem{mop20} S.~Mohanty, R.~O'Donnell, P.~Paredes,
+\emph{Explicit near-Ramanujan graphs of every degree}, STOC 2020;
+arXiv:1909.06988.
+\bibitem{xuzhang26} Z.~Xu, X.~Zhang, \emph{An improved upper bound for
+the Bilu--Linial conjecture}, arXiv:2606.28797 (2026).
+\end{thebibliography}
+
+\end{document}
