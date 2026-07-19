@@ -1,0 +1,276 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{hyperref}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}[lemma]{Proposition}
+\newtheorem{conjecture}[lemma]{Conjecture}
+\theoremstyle{remark}
+\newtheorem{remark}[lemma]{Remark}
+
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\rhomax}{\rho}
+\DeclareMathOperator{\tr}{tr}
+
+\title{Signed circulants at the Ramanujan bound}
+\author{Vaibhav Suvagiya\\
+\small Sardar Vallabhbhai National Institute of Technology, Surat
+\thanks{Companion note to \cite{companionA}. Verification suite,
+drivers, and experimental data:
+\url{https://github.com/Vaibhavs25/bilu-linial-parity}}}
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For the circulant graph $C_n(1,2)$ with $n\ge10$ even, the $\F_2$ system
+requiring every quadrilateral to be unbalanced is consistent and its
+solutions form exactly four switching classes. We show that the class
+containing the signing which is $+1$ on step-$1$ edges and $(-1)^i$ on
+step-$2$ edges has spectrum
+$\{\pm2\sqrt{\cos^2\theta_k+\cos^2 2\theta_k}\}$ and spectral radius
+exactly $2\sqrt2$, well below the Kesten bound $2\sqrt3$; that the
+quadrilateral system is equivalent to alternating triangle fluxes, so
+that the four classes are coordinatized by $(\tau_0,\alpha)$ and the
+spectral radius depends only on the Hamilton-cycle holonomy $\alpha$;
+and that the two twisted classes attain
+$\rho_-(n)=2\sqrt{\cos^2(\pi/n)+\cos^2(2\pi/n)}<2\sqrt2$. Exhaustive
+enumeration of all $2^{n+1}$ switching classes for
+$n\in\{8,10,12,14,16,18\}$ shows that $\rho_-(n)$ is the global
+minimum in every case, and we conjecture this for all even $n$; the
+lower bound is a flux-minimization statement in the sense of Lieb's
+flux-phase theorem. For odd $n$ the quadrilateral system is
+inconsistent.
+\end{abstract}
+
+\section{Setup}
+
+Let $G=(V,E)$ be a connected graph with $n$ vertices and $m$ edges and
+let $\sigma\in\{\pm1\}^E$ be a signing of its adjacency matrix,
+encoded by $s\in\F_2^E$ with $\sigma_e=(-1)^{s_e}$. The spectrum of
+the signed adjacency matrix $A_\sigma$ is invariant under switching,
+and the switching class of $\sigma$ is determined by the signs
+$(-1)^{s\cdot\chi_C}$ of cycles $C$; a cycle is \emph{unbalanced} if
+its sign is $-1$. There are $2^{m-n+1}$ switching classes. Write
+$\rhomax(A_\sigma)=\max_i|\lambda_i(A_\sigma)|$. For a $d$-regular
+graph, the conjecture of Bilu and Linial \cite{bilulinial06} asserts
+that $\min_\sigma\rhomax(A_\sigma)\le2\sqrt{d-1}$; it is known
+one-sidedly, hence for bipartite graphs \cite{mss15}, and two-sidedly
+with the constant $2\sqrt{3(d-1)}$ \cite{xuzhang26}.
+
+The circulant $C_n(1,2)$ has vertex set $\mathbb Z_n$ and edges
+$\{i,i{+}1\}$ (step $1$) and $\{i,i{+}2\}$ (step $2$); it is
+$4$-regular, with Kesten bound $2\sqrt3\approx3.464$. Its
+quadrilaterals, for $n\ge10$, are exactly
+$Q_i=(i,\,i{+}1,\,i{+}3,\,i{+}2)$, one for each $i\in\mathbb Z_n$, and
+its triangles are $T_i=(i,\,i{+}1,\,i{+}2)$. At $n=8$ the step-$2$
+edges close into two further quadrilaterals, $(0,2,4,6)$ and
+$(1,3,5,7)$; we assume $n\ge10$ throughout and treat that case in
+Remark~\ref{rem:n8}. We study the $\F_2$ system
+\begin{equation}\label{eq:sys}
+s\cdot\chi_{Q_i}=1\qquad(i\in\mathbb Z_n),
+\end{equation}
+requiring every quadrilateral to be unbalanced. This is the parity
+family of the companion manuscript \cite{companionA} specialized to
+$C_n(1,2)$; there, averaging over such families is developed into a
+general method for the Bilu-Linial conjecture, with short even cycles
+shown to control the even traces of $A_\sigma$ at first order. The
+present graphs furnish its exactly solvable case.
+
+\section{Results}
+
+\begin{proposition}\label{prop:circ}
+Let $n\ge10$ be even. On $C_n(1,2)$ the system \eqref{eq:sys}
+is consistent and its solutions form exactly four switching classes. The
+class containing the signing $\sigma\equiv+1$ on step-$1$ edges
+$\{i,i{+}1\}$ and $\sigma_{\{i,i+2\}}=(-1)^i$ on step-$2$ edges has
+spectrum
+\[
+\Big\{\pm2\sqrt{\cos^2\theta_k+\cos^2 2\theta_k}\ :\
+\theta_k=\tfrac{2\pi k}{n},\ 0\le k<\tfrac n2\Big\},
+\]
+so its spectral radius equals $2\sqrt2$ exactly, against the Kesten floor
+$2\sqrt3$. For odd $n$ the system is inconsistent, and at most $n-1$
+quadrilaterals can be simultaneously unbalanced.
+\end{proposition}
+
+\begin{proof}
+The quadrilaterals of $C_n(1,2)$ are the $Q_i$, one per
+vertex, with sign $a_ia_{i+2}\,b_ib_{i+1}$, where $a_i,b_i$ denote the
+signs of $\{i,i{+}1\}$ and $\{i,i{+}2\}$. The displayed signing gives
+$a_ia_{i+2}b_ib_{i+1}=(-1)^i(-1)^{i+1}=-1$ for all $i$, so the system is
+consistent. If $\sum_{i\in S}\chi_{Q_i}=0$, then comparing coefficients
+of the step-$2$ edge $\{i,i{+}2\}\in Q_i\cap Q_{i-1}$ forces $S$ to be
+shift-invariant, so $S=\emptyset$ or $S=\mathbb{Z}_n$; the full sum is
+indeed zero (each edge lies in exactly two quadrilaterals). Hence the
+constraint map on the $2^{\,m-n+1}=2^{\,n+1}$ switching classes has rank
+$n-1$, and the solution set is a coset of dimension $2$: four classes.
+
+For the displayed class, write $C_1,C_2$ for the unsigned step-$1$ and
+step-$2$ circulants and $D=\operatorname{diag}((-1)^j)$; then
+$A_\sigma=C_1+DC_2$, which is symmetric since $D$ commutes with the even
+shift $C_2$. On the orthonormal Fourier basis
+$f_k(j)=n^{-1/2}e^{2\pi ijk/n}$ we have $C_1f_k=2\cos\theta_k\,f_k$,
+$C_2f_k=2\cos2\theta_k\,f_k$, and $Df_k=f_{k+n/2}$. Each plane
+$\operatorname{span}\{f_k,f_{k+n/2}\}$ is therefore invariant, carrying
+the block
+\[
+\begin{pmatrix} 2\cos\theta_k & 2\cos2\theta_k\\
+2\cos2\theta_k & -2\cos\theta_k\end{pmatrix},
+\]
+where we used $\cos\theta_{k+n/2}=-\cos\theta_k$ and
+$\cos2\theta_{k+n/2}=\cos2\theta_k$. A traceless symmetric $2\times2$
+block $\left(\begin{smallmatrix}a&b\\ b&-a\end{smallmatrix}\right)$ has
+eigenvalues $\pm\sqrt{a^2+b^2}$, giving the stated spectrum. Setting
+$u=\cos^2\theta\in[0,1]$,
+$\cos^2\theta+\cos^22\theta=4u^2-3u+1\le2$ with equality iff $u=1$,
+attained at $k=0$; hence $\rhomax=2\sqrt2$. For odd $n$, summing all $n$
+constraints gives $0$ on the left (each edge appears twice) and
+$n\equiv1\pmod2$ on the right.
+\end{proof}
+
+\begin{proposition}[Twisted classes]\label{prop:twist}
+Let $\tau_i$ denote the
+sign of the triangle $T_i=(i,i{+}1,i{+}2)$ and $\alpha$ the sign product
+around the step-$1$ Hamilton cycle $H$. Then
+$\chi_{Q_i}=\chi_{T_i}+\chi_{T_{i+1}}$, so \eqref{eq:sys} is equivalent
+to the alternation $\tau_{i+1}=-\tau_i$; the triangles together with $H$
+form a basis of the cycle space, so the four solution classes are
+coordinatized by $(\tau_0,\alpha)\in\{\pm1\}^2$; and rotation by one
+vertex is an automorphism carrying $(\tau_0,\alpha)$ to
+$(-\tau_0,\alpha)$. Consequently $\rhomax$ depends on $\alpha$ alone: it
+equals $2\sqrt2$ for $\alpha=+1$, and for $\alpha=-1$ it equals
+\[
+\rho_-(n)\;:=\;2\sqrt{\cos^2(\pi/n)+\cos^2(2\pi/n)}\;<\;2\sqrt2 .
+\]
+In particular $\min_\sigma\rhomax(A_\sigma)\le\rho_-(n)$ for every even
+$n$.
+\end{proposition}
+
+\begin{proof}
+Each step-$2$ edge $b_i$ lies in $T_i$ only, so
+$\sum_{i\in S}\chi_{T_i}=0$ forces $S=\emptyset$; together with the fact
+that no combination of triangles has empty step-$2$ support except the
+empty one, $\{\chi_{T_0},\dots,\chi_{T_{n-1}},\chi_H\}$ is a basis of
+the $(n{+}1)$-dimensional cycle space, giving the coordinates; the
+rotation statement is immediate since rotation shifts the alternating
+pattern by one. For $\alpha=-1$ it therefore suffices to treat the
+representative with $\tau_i=(-1)^i$. Let $R$ be the cyclic shift,
+$D=\operatorname{diag}((-1)^j)$, $\varphi=\pi/n$, and set
+\[
+A(\varphi)\;=\;e^{i\varphi}R+e^{-i\varphi}R^{*}
+\;+\;e^{2i\varphi}DR^{2}+e^{-2i\varphi}R^{-2}D ,
+\]
+a Hermitian matrix supported on $C_n(1,2)$. Its holonomy on the directed
+triangle $i\to i{+}1\to i{+}2\to i$ is
+$e^{i\varphi}\cdot e^{i\varphi}\cdot(-1)^ie^{-2i\varphi}=(-1)^i$, and on
+$H$ it is $e^{in\varphi}=-1$; two Hermitian matrices with common connected support, all nonzero
+entries of modulus one, and equal holonomy on every cycle are
+conjugate by a diagonal unitary (both conditions hold here), so $A(\varphi)$ is isospectral with the real signed
+adjacency matrix of the class $(+1,-1)$. Note the step-$2$ phase is
+forced to be $2\varphi$: this is exactly the co-shift that keeps the
+triangle holonomies real, and it is the step omitted by a naive
+one-parameter Bloch argument. As in Proposition~\ref{prop:circ}, the
+planes $\operatorname{span}\{f_k,f_{k+n/2}\}$ are invariant, with blocks
+\[
+\begin{pmatrix}
+2\cos(\theta_k{+}\varphi)&2\cos(2\theta_k{+}2\varphi)\\
+2\cos(2\theta_k{+}2\varphi)&-2\cos(\theta_k{+}\varphi)
+\end{pmatrix},
+\]
+hence spectrum $\pm2\sqrt{g(\theta_k+\pi/n)}$ with
+$g(\theta)=\cos^2\theta+\cos^22\theta$ and shifted momenta
+$\theta_k+\pi/n\in\{(2k{+}1)\pi/n\}$, which avoid $0$ and $\pi$. Writing
+$g=4u^2-3u+1$ with $u=\cos^2\theta$, $g$ decreases on $[0,\theta_0]$ and increases on
+$[\theta_0,\pi/2]$, where $\cos2\theta_0=-\tfrac14$, with
+$g(\pi/2)=1$ and $g$ symmetric under $\theta\mapsto\pi-\theta$;
+since $g(\pi/n)\ge g(\pi/8)=\tfrac{4+\sqrt2}{4}>1$ for every even
+$n\ge8$, the maximum over the shifted lattice is attained at $\pi/n$,
+giving $\rho_-(n)$. (We state the inequality from $n=8$ so that
+Remark~\ref{rem:n8} may invoke it.)
+\end{proof}
+
+\begin{conjecture}\label{conj:circ}
+For every even $n\ge8$,
+$\min_\sigma\rhomax(A_\sigma)=\rho_-(n)$ on $C_n(1,2)$: the $\alpha=-1$
+twisted class is the global optimizer. This is verified by exhaustive
+enumeration of all $2^{n+1}$ switching classes for
+$n\in\{8,10,12,14,16,18\}$, with agreement to $10^{-9}$. The lower
+bound over all classes is a flux-minimization statement in the spirit of
+Lieb's flux-phase theorem \cite{lieb94}: among all $\F_2$ flux
+assignments to the triangle-Hamilton cycle basis, alternating triangle
+flux with anti-periodic step-$1$ holonomy minimizes the spectral radius.
+On this family the quadrilateral rule thus contains the (conjecturally
+exact) global optimizer, while random signings concentrate \emph{above}
+the Kesten floor $2\sqrt3$ from $n\approx480$.
+\end{conjecture}
+
+\begin{remark}[The exceptional case $n=8$]\label{rem:n8}
+Identifying \eqref{eq:sys} with ``every quadrilateral of $C_n(1,2)$ is
+unbalanced'' - and hence with the parity family of \cite{companionA}
+- requires $n\ge10$. At $n=8$ the step-$2$ edges form two additional
+quadrilaterals, $S_0=(0,2,4,6)$ and $S_1=(1,3,5,7)$, which the
+canonical signing of Proposition~\ref{prop:circ} balances. All
+statements above remain true at $n=8$ for the system \eqref{eq:sys}
+exactly as written: the proofs of Propositions~\ref{prop:circ}
+and~\ref{prop:twist} apply verbatim (rank $7=n-1$, four classes,
+$\rho\in\{2\sqrt2,\rho_-(8)\}$, the lattice maximum covered by
+$g(\pi/8)>1$). The strictly larger system requiring all ten
+quadrilaterals to be unbalanced is resolved by a flux computation.
+Over $\F_2$,
+\[
+\chi_{S_0}=\chi_H+\!\!\sum_{i\ \mathrm{even}}\!\chi_{T_i},\qquad
+\chi_{S_1}=\chi_H+\!\!\sum_{i\ \mathrm{odd}}\!\chi_{T_i},
+\]
+since each sum on the right covers every step-$1$ edge exactly once
+and the four step-$2$ edges of the named quadrilateral exactly once.
+On the solution family $\tau_i=\tau_0(-1)^i$, so
+$\prod_{i\,\mathrm{even}}\tau_i=\prod_{i\,\mathrm{odd}}\tau_i=+1$ and
+both extra quadrilaterals carry sign $\alpha$: the two additional
+constraints are jointly equivalent to $\alpha=-1$. The all-ten system
+therefore has exactly the two twisted classes $(\pm1,-1)$ as its
+solutions, both attaining
+\[
+\rho_-(8)\;=\;2\sqrt{\cos^2(\pi/8)+\cos^2(\pi/4)}\;=\;\sqrt{4+\sqrt2}
+\;=\;2.326846\ldots,
+\]
+and it excludes the $2\sqrt2$ class. Conjecture~\ref{conj:circ} is
+unaffected and was additionally verified at $n=8$ along with the other
+sizes.
+\end{remark}
+
+\begin{remark}
+The spectral radius is constant on each of the four classes of the
+solution family, so sampling the family sees at most the two values
+$\{\rho_-(n),\,2\sqrt2\}$ of Proposition~\ref{prop:twist}. By contrast, uniformly random signings of $C_n(1,2)$
+concentrate \emph{above} the Kesten bound for $n\gtrsim480$, while the
+family sits at $2\sqrt2$ and below, an instance of the general
+phenomenon that uniform averaging cannot certify a sub-Kesten signing
+whereas the parity family can \cite{companionA}.
+Conjecture~\ref{conj:circ} asks that alternating triangle flux with
+anti-periodic step-$1$ holonomy minimize the spectral radius over all
+$2^{n+1}$ flux assignments, the discrete analogue, for signed
+circulants, of Lieb's flux-phase theorem \cite{lieb94}. Reflection
+positivity on $C_n(1,2)$ is the natural route to the lower bound and
+is left open.
+\end{remark}
+
+\begin{thebibliography}{9}
+\bibitem{bilulinial06} Y.~Bilu, N.~Linial,
+\emph{Lifts, discrepancy and nearly optimal spectral gap},
+Combinatorica 26 (2006), 495-519.
+\bibitem{companionA} Author, \emph{Parity families and a
+kernel-averaged $L$-function for near-Ramanujan signings}, companion
+manuscript.
+\bibitem{lieb94} E.~H.~Lieb, \emph{Flux phase of the half-filled band},
+Phys.~Rev.~Lett.~73 (1994), 2158-2161.
+\bibitem{mss15} A.~W.~Marcus, D.~A.~Spielman, N.~Srivastava,
+\emph{Interlacing families I: Bipartite Ramanujan graphs of all
+degrees}, Ann.~of Math.~182 (2015), 307-325.
+\bibitem{xuzhang26} Z.~Xu, X.~Zhang, \emph{An improved upper bound for
+the Bilu-Linial conjecture}, arXiv:2606.28797 (2026).
+\end{thebibliography}
+
+\end{document}
