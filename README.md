@@ -9,14 +9,14 @@ This repository contains the verification suite, executed drivers, CI gate, rege
 The final cumulative local manuscript was rebuilt on 19 September 2026 after the referee audit.
 
 Local final artifact hashes:
-- LaTeX SHA-256: `ef9d4ae04292f4b492ec9f7d8f5ef21c8190818c78e01680a51bd30f33428f5e`
-- PDF SHA-256: `4367c72c7e8fb561c817cf5b5575c54b936a73070ff943c7d607de2bfff6ccde`
+- LaTeX SHA-256: `3cbf59e50004f6c95c6786a916a8526ae212f2f675e0adc9f5bb3b182b4f2ccc`
+- PDF SHA-256: `fa77875ba58f2bd86a8534ceb92121f2d36d07412aa85d77d075bb3d3410bade`
 
-The final manuscript is 20 pages. The local build uses pdfTeX 1.40.26 and completed in three passes with no LaTeX warnings. It has 37 labels and all internal references resolve.
+The final manuscript is 22 pages. The local build uses pdfTeX 1.40.26 and completed in three passes with `-halt-on-error`; the final build logs contain no LaTeX errors or warnings. It has 38 unique labels and all internal references resolve.
 
 The final necessary referee fixes are recorded in `FINAL_MANUSCRIPT_STATUS.md`.
 
-The exact final PDF and LaTeX files are currently in the ChatGPT working environment; the older repository manuscript files remain as provenance until those final artifacts are uploaded there.
+The exact final PDF and LaTeX files are currently in the ChatGPT working environment; older repository manuscript files remain as provenance until those final artifacts are uploaded there.
 
 ## Verification and CI
 
@@ -34,13 +34,14 @@ The exact final PDF and LaTeX files are currently in the ChatGPT working environ
 
 - `variance_onset_v2.csv` — current corrected variance artifact.
 - `variance_onset_v1.csv` — preserved provenance artifact from the pre-fix run.
-- `campaign.csv` — matched-evaluation-budget experiment.
+- `campaign.csv` — historical matched-evaluation-budget experiment/provenance artifact.
+
+The corrected `campaign.py` implements the rank-matched random-affine control and writes `campaign_v2.csv`; that corrected campaign protocol has not been rerun for this final manuscript snapshot, so no new campaign results are claimed.
 
 ## Historical audit record
 
 The July 2026 audit/changelog files and standalone manuscripts remain in the repository as provenance. The September 2026 integrated revision is documented separately in `FINAL_MANUSCRIPT_STATUS.md`.
 
-
 ## Final snapshot
 
-Frozen repository branch: `final-2026-09-19`, based at commit `4ccb2fd508df1a70f76ef40615bfb57ade92b903`. The exact local integrated PDF/source are identified by the SHA-256 hashes above; the final binary PDF is supplied with the submission package.
+The frozen `final-2026-09-19` branch is maintained as the repository audit snapshot. The exact local integrated PDF/source are identified by the SHA-256 hashes above; the final binary PDF is supplied with the submission package.
