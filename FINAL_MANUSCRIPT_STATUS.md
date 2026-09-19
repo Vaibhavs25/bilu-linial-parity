@@ -36,6 +36,7 @@ SHA-256:
 - PDF metadata populated.
 - Full 22-page rendering checked; no visible clipping, overlap, broken glyphs, or malformed pages.
 - PDF preflight: openable, unencrypted, 22 letter-size pages.
+- Pixel comparison against the immediately preceding release was completed with `pdftoppm`; the changed pages were reviewed and no new layout defects were observed.
 
 ## Reproducibility freeze
 
