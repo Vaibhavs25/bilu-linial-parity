@@ -271,9 +271,10 @@ def gen_planted(i):
     return f"planted64[{i}]", G
 
 def gen_conditioned(i, band=(26, 38), burn=4000):
-    """Uniform over 4-regular n=64 graphs with #C4 in `band`: warm start by
-    greedy quad-increasing swaps, then symmetric double-swap MCMC accepting
-    exactly the moves that keep the chain simple, 4-regular, and in-band."""
+    """MCMC control on 4-regular n=64 graphs kept in a prescribed #C4 band.
+A warm start enters the band, then symmetric double-swap MCMC proposes moves
+that are accepted only when the graph remains simple, 4-regular, and in-band.
+No uniformity or mixing guarantee is claimed."""
     rng = np.random.default_rng(SEED0 + 500 + i)
     n = 64
     G = nx.random_regular_graph(4, n, seed=int(rng.integers(1 << 31)))
@@ -309,7 +310,7 @@ def gen_conditioned(i, band=(26, 38), burn=4000):
     assert band[0] <= c4 <= band[1] + 20, f"warm start failed (c4={c4})"
     while c4 > band[1]:                          # (rarely) overshot
         try_swap(require_gain=False)
-    for _ in range(burn):                        # conditioned-uniform mixing
+    for _ in range(burn):                        # MCMC burn-in within the band
         try_swap(require_gain=False)
     G = nx.from_numpy_array(A)
     return f"conditioned64[{i}](c4={c4})", G
