@@ -4,15 +4,15 @@ This repository contains the verification suite, executed drivers, CI gate, rege
 
 ## Final integrated manuscript
 
-**Parity families and signed spectra: kernel averaging, near-Ramanujan bounds, and periodic circulant counterexamples**
+**Parity families and signed spectra: kernel averaging, near-Ramanujan bounds, and exact circulant models**
 
 The final cumulative local manuscript was rebuilt on 19 September 2026 after the referee audit.
 
 Local final artifact hashes:
-- LaTeX SHA-256: `6a27d4834c7ba08aed7bd4fe5549b30bd86c00a94005966790bafba0d6a05cc6`
-- PDF SHA-256: `413de50fec0668424f4a89bbb6a4bfdb65e7419d9b41b2df35f04d4bcb767ce4`
+- LaTeX SHA-256: `c9d3856d1134ad6b0e95cc8f0a076c72d2d0a8a14e8aa7266d9d5a138810109b`
+- PDF SHA-256: `3f7ab24cbb778b62e4d821ec107f6f0654494b2f23a3c852fa3f04164948a0d4`
 
-The final manuscript is 21 pages. The local build uses pdfTeX 1.40.26 and completed in three passes with no LaTeX warnings. It has 37 labels and all internal references resolve.
+The final manuscript is 20 pages. The local build uses pdfTeX 1.40.26 and completed in three passes with no LaTeX warnings. It has 37 labels and all internal references resolve.
 
 The final necessary referee fixes are recorded in `FINAL_MANUSCRIPT_STATUS.md`.
 
