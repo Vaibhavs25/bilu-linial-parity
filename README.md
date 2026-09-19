@@ -39,3 +39,8 @@ The exact final PDF and LaTeX files are currently in the ChatGPT working environ
 ## Historical audit record
 
 The July 2026 audit/changelog files and standalone manuscripts remain in the repository as provenance. The September 2026 integrated revision is documented separately in `FINAL_MANUSCRIPT_STATUS.md`.
+
+
+## Final snapshot
+
+Frozen repository branch: `final-2026-09-19`, based at commit `4ccb2fd508df1a70f76ef40615bfb57ade92b903`. The exact local integrated PDF/source are identified by the SHA-256 hashes above; the final binary PDF is supplied with the submission package.
