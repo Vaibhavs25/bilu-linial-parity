@@ -654,7 +654,7 @@ The unsigned $B_{K_d}$ is irreducible and aperiodic with Perron value
 $d-2$; its remaining eigenvalues have modulus at most
 $\max(1,\sqrt{d-2})<d-2$ (Ihara-Bass from
 $\operatorname{spec}A(K_d)=\{d-1,(-1)^{d-1}\}$). By the equality case of
-Wielandt's theorem \cite{meyer00}, a signed version satisfies
+Wielandt's theorem \cite[Thm.~8.3.11]{hornjohnson13}, a signed version satisfies
 $\rho(B_{K_d,\sigma})=\rho(B_{K_d})$ if and only if
 $B_{K_d,\sigma}=\pm D B_{K_d}D^{-1}$ for a diagonal $D$ with
 $|D|=I$, i.e.\ iff $\sigma$ is switching-equivalent to the all-plus or
@@ -765,12 +765,13 @@ at most
 2s\sum_{a=0}^{4s}c_S(t+a)
 \le C s^2(4\ell+1)^{3r_0+1}(1+\delta)^{t+4s},
 \]
-using (ii), since $t+a\le3\ell$. If the support $S$ is itself a single
-cycle, the non-backtracking continuation from a directed edge is forced in each
-orientation, so a stale segment of length $t$ has at most $2s$ possible starting
-orientations. This is smaller than the displayed polynomial bound after enlarging
-$C$, and therefore the pure-cycle supports are covered separately without invoking
-Lemma~\ref{lem:reach}. Multiplying over at most $r_0+1$ stale segments, whose
+using (ii), since $t+a\le3\ell$. If the support $S$ is itself a single cycle, then $S$ has exactly $s$ vertices and
+its two cyclic orientations are the only non-backtracking directions. Hence, once the
+starting directed edge is chosen, a stale segment of length $t$ is forced, and there
+are at most $2s$ such segments over all starting orientations. Since this is bounded
+by the displayed polynomial factor after enlarging $C$, pure-cycle supports are
+handled separately here and Lemma~\ref{lem:reach} is not invoked in that case.
+Multiplying over at most $r_0+1$ stale segments, whose
 total length is at most $\ell-s$, gives
 \[
 \mathrm{Ev}_\ell\le nd\,\ell^{r_0}\sum_{s\le\ell/2}
@@ -987,8 +988,12 @@ C_{\rm rank}\frac{s\log s}{R_0}
 \le \frac{C_{\rm rank}}{2}(j+\Lambda)\frac{\log(e\ell)}{R_0}
 \le\theta(j+\Lambda),
 \]
-provided $R_0\ge C_{\rm rank}\log(e\ell)/(2\theta)$; this is exactly the
-preceding $R_0\ge C'\log\ell/\theta$ requirement after enlarging $C'$.
+provided $R_0\ge C_{\rm rank}\log(e\ell)/(2\theta)$. Because
+$\log(e\ell)\asymp\log\ell$ and $\theta=\delta/(10\log M)$ with
+$\log M=O(\log\ell)$, this requirement is implied by
+$R_0\ge C'\log\ell/\theta$ after enlarging the absolute constant $C'$ once.
+Thus the rank estimate holds uniformly for every $1\le j\le\ell$; no
+$j$-dependent choice of constants is being used.
 Thus in all cases $r\le1+\theta(j+\Lambda)$.  For $j\ge1$ the support contains a cycle, so $r\ge1$. Let $q$ be the number of maximal fresh runs. By the same
 rank-increase argument as in the proof of Proposition~\ref{prop:upper},
 $q\le r$. For a fixed $q$, the fresh-run intervals are specified by at most
@@ -1287,18 +1292,25 @@ A(\varphi)\;=\;e^{i\varphi}R+e^{-i\varphi}R^{*}
 a Hermitian matrix supported on $C_n(1,2)$. Its holonomy on the directed
 triangle $i\to i{+}1\to i{+}2\to i$ is
 $e^{i\varphi}\cdot e^{i\varphi}\cdot(-1)^ie^{-2i\varphi}=(-1)^i$, and on
-$H$ it is $e^{in\varphi}=-1$; two Hermitian matrices with common connected support, all nonzero
-entries of modulus one, and equal holonomy on every cycle are
-conjugate by a diagonal unitary. For completeness, choose a spanning tree,
-put $d_r=1$ at a root, and define $d_v$ recursively along the tree so that
-$\eta_{uv}=d_u d_v^{-1}$ on every tree edge, where $\eta_{uv}$ is the ratio
-of the two corresponding entries. Equality of holonomies on the fundamental
-cycles gives the same identity on each non-tree edge. Thus
-$D=\operatorname{diag}(d_v)$ satisfies $A(\varphi)=D A_{(+1,-1)}D^{-1}$,
-so the two matrices are isospectral. Note the step-$2$ phase is
-forced to be $2\varphi$: this is exactly the co-shift that keeps the
-triangle holonomies real, and it is the step omitted by a naive
-one-parameter Bloch argument. As in Proposition~\ref{prop:circ}, the
+$H$ it is $e^{in\varphi}=-1$.
+
+\begin{lemma}[Holonomy determines diagonal-unitary gauge]
+Let $M$ and $N$ be Hermitian matrices with the same connected support graph,
+all corresponding nonzero entries of modulus one, and identical holonomy on
+every cycle. Then $M$ and $N$ are conjugate by a diagonal unitary.
+\end{lemma}
+
+\begin{proof}
+Choose a spanning tree, set $u_r=1$ at a root, and define $u_v$ recursively so
+that $M_{uv}/N_{uv}=u_u\overline{u_v}$ on every tree edge. Equality of
+holonomies on the fundamental cycles gives the same identity on each non-tree
+edge. Thus $U=\operatorname{diag}(u_v)$ satisfies $M=UNU^{-1}$.
+\end{proof}
+
+The lemma gives $A(\varphi)=U A_{(+1,-1)}U^{-1}$, so the two matrices are
+isospectral. Note that the step-$2$ phase is forced to be $2\varphi$: this is
+exactly the co-shift that keeps the triangle holonomies real, and it is the step
+omitted by a naive one-parameter Bloch argument. As in Proposition~\ref{prop:circ}, the
 planes $\operatorname{span}\{f_k,f_{k+n/2}\}$ are invariant, with blocks
 \[
 \begin{pmatrix}
@@ -1562,6 +1574,8 @@ Phys.~Rev.~Lett.~73 (1994), 2158-2161.
 Ann.~of Math.~182 (2015), 307-325.
 \bibitem{meyer00} C.~D.~Meyer, \emph{Matrix Analysis and Applied Linear Algebra},
 SIAM, Philadelphia, 2000, pp.~675--676.
+\bibitem{hornjohnson13} R.~A.~Horn, C.~R.~Johnson, \emph{Matrix Analysis}, 2nd ed.,
+Cambridge University Press, 2013, Chapter~8.
 \bibitem{mop20} S.~Mohanty, R.~O'Donnell, P.~Paredes,
 \emph{Explicit near-Ramanujan graphs of every degree}, SIAM J.~Comput.~51
 (2022), STOC20-1--STOC20-23; arXiv:1909.06988. DOI: 10.1137/20M1342112.

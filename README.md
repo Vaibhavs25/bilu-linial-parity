@@ -7,32 +7,28 @@
 The September 19, 2026 integrated manuscript is frozen with the audited proof and presentation revisions.
 
 Exact local submission artifacts:
-- final_combined_paper_final.tex
-- final_combined_paper_final.pdf
+- `final_combined_paper_final.tex`
+- `final_combined_paper_final.pdf`
 
 SHA-256:
-- Source: 7bf1fbebdb42cc66ef4016d36572191d1b8aec062cec55f93c128f1ed84b37f3
-- PDF: b2eeffb1ddeaa5337b117ff74064c4863d76871439b53336f4e63f14f627f3c7
+- Source: `7975fff4e4a6b7c1f8aba2528bfab1b6ffa374bd5fbc8f6f9dc30dfd49fe5ca8`
+- PDF: `99fb331b5c2d863a59d205e3a82ed3827f9a44352cd237c46697be3cec0d1108`
+- Final package: `8fe8f1b1c5aa07196b5ee6eccfed122bd91d8677071d6528d870b0865c08c993`
 
-The manuscript is 22 pages, US Letter. The local build used pdfTeX 1.40.26, three passes with -halt-on-error, and the final pass has no warnings or undefined references. The source contains 38 unique labels and all cross-references resolve.
-
-The exact audited source is also committed at:
-submission/final_combined_paper_final.tex
-
-The exact binary PDF cannot be attached through the available GitHub connector; it is supplied in the release package and pinned by the PDF hash above.
+The audited source is committed at `submission/final_combined_paper_final.tex`. The generated PDF is supplied as the external binary submission artifact because the available GitHub connector does not expose binary release-asset upload.
 
 ## Verification
 
-- verify_all.py — 18/18 PASS.
-- ci.sh — verification/drivers gate.
-- campaign.py — corrected rank-matched affine control and MCMC wording.
-- variance_onset_v2.csv — corrected variance artifact.
-- variance_onset_v1.csv and campaign.csv are retained as provenance.
+- `verify_all.py` — 18/18 PASS.
+- `ci.sh` — verification/drivers gate.
+- `campaign.py` — corrected exact-rank affine control and non-uniform MCMC wording.
+- `variance_onset_v2.csv` — corrected variance artifact.
+- `variance_onset_v1.csv` and `campaign.csv` are retained as provenance.
 
 The corrected campaign protocol has not been rerun for this final manuscript snapshot, so no new campaign results are claimed.
 
 ## Final freeze
 
-Branch: final-2026-09-19
+Branch: `final-2026-09-19`
 
-The branch freeze commit contains the audited repository code/data, final status record, exact source, and SHA-256 manifest. The PDF remains an external-but-hashed submission artifact because binary release-asset upload is not exposed by the connector.
+The freeze commit contains the audited source, corrected code, preserved data, release status, and SHA-256 manifest. The PDF remains an external-but-hashed submission artifact.
