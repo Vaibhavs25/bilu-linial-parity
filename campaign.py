@@ -1,24 +1,27 @@
 """campaign.py -- the unified Section-7 experimental campaign (Paper A).
 
-Three components, one harness, all strategies at an EQUAL EVALUATION
-BUDGET per instance (N_EVAL rho-evaluations; deterministic and
-hardware-portable, unlike wall-clock), >= 20 instances per set, 95% t-CIs and paired deltas:
+Three components, one harness, all strategies at an EQUAL SPECTRAL-EVALUATION
+BUDGET per instance (N_EVAL spectral-radius evaluations; deterministic
+and hardware-portable, unlike wall-clock), with >=20 instances per set:
 
-  1. Matched-budget baselines: parity family vs uniform random, simulated
-     annealing, and tabu search, each given the same time budget T.
-  2. Ablation: parity family vs an equal NUMBER of uniformly random
-     affine GF(2) constraints on the co-tree coordinates (same codimension,
-     same sampler) -- attributes the effect to WHICH subspace, not to
-     conditioning per se.
-  3. Conditioned-uniform control: 4-regular instances sampled uniformly
-     from {#C4 in a fixed band} via symmetric double-edge-swap MCMC with
-     band-rejection -- kills the generator-bias objection to the planted
-     construction.
+  1. Exploratory matched-budget baselines: retained parity subsystem vs
+     uniform random signings, simulated annealing, and tabu search.
+  2. Corrected ablation: retained parity subsystem vs a uniformly random
+     affine GF(2) system with EXACTLY THE SAME RANK (codimension) on each
+     instance.
+  3. MCMC-conditioned graph control: 4-regular instances constrained to a
+     prescribed C4-count band by symmetric double-edge-swap MCMC. We call
+     this an MCMC control; no uniformity or mixing guarantee is claimed.
 
-Instance sets (20 each): planted4reg n=64; conditioned-uniform n=64 at the
-same quadrilateral band; circulants C_n(1,2), n = 24,28,...,100.
+The planted graphs may have inconsistent full short-even systems. On such
+instances CycleSystem retains a consistent RREF subsystem; this arm is
+therefore named a retained/greedy-consistent parity subsystem rather than
+the full prescribed parity family.
 
-Checkpointed to campaign.csv (one row per instance x strategy); rerun
+Instance sets (20 each): planted4reg n=64; MCMC-conditioned n=64; circulants
+C_n(1,2), n = 24,28,...,100. The C4 count is recorded per instance.
+
+Checkpointed to campaign_v2.csv (one row per instance x strategy); rerun
 resumes. `python3 campaign.py --quick` runs a small smoke configuration.
 """
 import csv
@@ -32,7 +35,7 @@ from scipy import stats
 from variance_onset import CycleSystem, planted_4cycles
 from signed_spectra import signed_adjacency, edge_list
 
-CSV = "campaign.csv"
+CSV = "campaign_v2.csv"
 N_EVAL = 2000           # rho-evaluations per strategy per instance
                         # (~1.2 s at n=64 on the reference machine)
 N_INST = 20
@@ -139,9 +142,39 @@ def even_cycle_rows(G, E, tree_mask, L=4):
         rows.append(r)
     return np.array(rows, np.uint8) if rows else np.zeros((0, j), np.uint8)
 
+# --------------------------------------------------------- GF(2) rank helpers
+
+def gf2_rank(A):
+    """Rank of a binary matrix over GF(2)."""
+    A = np.asarray(A, dtype=np.uint8).copy()
+    r = 0
+    for col in range(A.shape[1]):
+        p = next((i for i in range(r, A.shape[0]) if A[i, col]), None)
+        if p is None:
+            continue
+        A[[r, p]] = A[[p, r]]
+        for i in range(r + 1, A.shape[0]):
+            if A[i, col]:
+                A[i] ^= A[r]
+        r += 1
+        if r == A.shape[0]:
+            break
+    return r
+
+def random_full_rank_matrix(r, c, rng):
+    """Draw an r-by-c random binary matrix of exact row rank r."""
+    if r == 0:
+        return np.zeros((0, c), dtype=np.uint8)
+    while True:
+        R = rng.integers(0, 2, (r, c), dtype=np.uint8)
+        if gf2_rank(R) == r:
+            return R
+
 # ---------------------------------------------------------------- strategies
 
 def strat_family(G, E, T, rng, L=4):
+    """Sample the retained affine parity subsystem. If the full short-even
+    system is inconsistent, this is the consistent RREF subsystem."""
     cs = CycleSystem(G, L)
     kd = len(cs.free)
     best = np.inf
@@ -151,26 +184,20 @@ def strat_family(G, E, T, rng, L=4):
     return best, T
 
 def strat_randcon(G, E, T, rng, L=4):
-    """Ablation arm: same NUMBER of constraints as the parity system, but
-    uniformly random rows over the co-tree coordinates, RHS 1."""
+    """Ablation arm with exactly the same constraint rank as the parity arm."""
+    cs = CycleSystem(G, L)
     tree_mask, kdim = cotree_setup(G, E)
-    n_rows = len(even_cycle_rows(G, E, tree_mask, L))
-    sys_ = None
-    for _ in range(50):  # redraw until consistent (a.s. immediate)
-        R = rng.integers(0, 2, (n_rows, kdim), dtype=np.uint8)
-        b = np.ones(n_rows, np.uint8)
-        cand = AffineF2(R, b)
-        if cand.consistent:
-            sys_ = cand
-            break
-    if sys_ is None:  # kdim < rank of random rows every time (tiny kdim)
-        return np.nan, 0
+    target_rank = cs.rank
+    R = random_full_rank_matrix(target_rank, kdim, rng)
+    b = np.ones(target_rank, np.uint8)
+    sys_ = AffineF2(R, b)
+    if sys_.rank != target_rank or not sys_.consistent:
+        raise RuntimeError("failed to construct exact-rank affine control")
     best = np.inf
     for _ in range(T):
         s = cotree_signs(G, E, tree_mask, sys_.sample(rng))
         best = min(best, rho(G, E, s))
     return best, T
-
 def strat_random(G, E, T, rng):
     best = np.inf
     for _ in range(T):
@@ -233,7 +260,7 @@ def strat_tabu(G, E, T, rng):
             it += 1
     return best, n_eval
 
-STRATEGIES = [("family", strat_family), ("randcon", strat_randcon),
+STRATEGIES = [("greedy_parity", strat_family), ("randcon", strat_randcon),
               ("random", strat_random), ("anneal", strat_anneal),
               ("tabu", strat_tabu)]
 
@@ -320,6 +347,10 @@ def main():
             E = edge_list(G)
             d = max(x for _, x in G.degree())
             floor = 2 * np.sqrt(d - 1)
+            cs_meta = CycleSystem(G, 4)
+            constraint_rows = cs_meta.ncon
+            constraint_rank = cs_meta.rank
+            c4_count = count_c4(nx.to_numpy_array(G)) if d == 4 else None
             for sname, fn in STRATEGIES:
                 if (set_name, i, sname) in done:
                     continue
@@ -330,6 +361,8 @@ def main():
                 wall = time.perf_counter() - t0
                 row = dict(set=set_name, i=i, instance=name,
                            n=G.number_of_nodes(), d=d, floor=round(floor, 6),
+                           c4_count=c4_count, constraint_rows=constraint_rows,
+                           constraint_rank=constraint_rank,
                            strategy=sname, best_rho=round(best, 6),
                            gap=round(best - floor, 6), n_eval=n_eval,
                            wall=round(wall, 3), budget=budget)
@@ -371,13 +404,13 @@ def summarize():
                   f"(min {g.min():+.4f}, max {g.max():+.4f}; "
                   f"mean evals {ne:.0f})")
         # paired deltas vs family
-        if "family" in gaps:
-            print("  paired deltas (strategy - family; positive = family wins):")
+        if "greedy_parity" in gaps:
+            print("  paired deltas (strategy - retained parity; positive = retained parity wins):")
             for sname in ("random", "anneal", "tabu", "randcon"):
                 if sname not in gaps:
                     continue
-                common = sorted(set(gaps["family"]) & set(gaps[sname]))
-                dl = np.array([gaps[sname][i] - gaps["family"][i]
+                common = sorted(set(gaps["greedy_parity"]) & set(gaps[sname]))
+                dl = np.array([gaps[sname][i] - gaps["greedy_parity"][i]
                                for i in common])
                 tcrit = stats.t.ppf(0.975, len(dl) - 1)
                 ci = tcrit * dl.std(ddof=1) / np.sqrt(len(dl))
