@@ -4,6 +4,15 @@ Two companion manuscripts, an aux-verified verification suite, three
 executed drivers, a CI gate, and regenerated data. Incorporates two rounds
 of external adversarial audit (v1 and v2, July 2026).
 
+## Current integrated manuscript
+
+The current submission manuscript is the integrated September 2026 version:
+**Parity families and signed spectra: kernel averaging, near-Ramanujan bounds, and periodic circulant counterexamples**.
+
+The cumulative final audit has closed the following manuscript issues: the bicycle-free rank lemma now uses an explicit connectedness and neighborhood-packing argument; the bicycle-free epsilon theorem uses the proved radius scale (R \ge C(\log\log n)^2/\delta) and the corrected (k=\Theta((\log n)^2)) trace cutoff; the parity-family consistency and bicycle-free definitions are explicit; unsupported random-2-lift and universal-necessity claims have been removed or qualified; the literature now includes the 2026 results of Huang, Lin--Zhou, and Xu; and the circulant section includes the period-8 counterexample family and its refined global-optimality conjecture.
+
+The final local manuscript is 21 pages and compiles with zero LaTeX warnings, 38 unique cross-reference labels, no missing references, and no unused bibliography entries. The repository's standalone July 2026 companion files remain as provenance; they are not silently replaced by the integrated manuscript.
+
 ## Manuscripts
 | file | what |
 |---|---|
