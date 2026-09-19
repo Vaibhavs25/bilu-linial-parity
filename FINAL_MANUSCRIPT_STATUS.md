@@ -9,8 +9,8 @@ Final local artifacts:
 - `final_combined_paper_final.pdf`
 
 SHA-256:
-- Source: `13d6bff3f167e4b7878876f739e5aa52f9f4aa285ee2ba3617c1016ce8492ace`
-- PDF: `6b72cdec9ad480ee836e0f5aef90d16ea820ecb5e367980891c436d50902b7c3`
+- Source: `8013afe7a537ef902221869cb5f0c328c6b865e1fe14ba6633ce7d7295ee3580`
+- PDF: `71b53c1b516e7f2be05a7e6ffceebf7e9cedabec8bc25500abdf8ae194d88402`
 
 ## Final cleanup completed
 
@@ -22,6 +22,9 @@ SHA-256:
 6. Remark 18: numerical theta/tree-burst measurements are explicitly introduced as computational observations.
 7. Remaining small circulant cases (n=26,28,30): the statement is now explicitly framed as a heuristic-search observation tied to the accompanying repository, not as an exhaustive computation or certified optimality result.
 8. Reference [16]: the July 16, 2026 date is retained.
+9. Proposition 13: corrected the non-Perron spectral bound from `max(1,sqrt(d-2))` to `max(1,sqrt(d-1))`, with the proposition's conclusion unchanged.
+10. Abstract: scoped the exact circulant four-class statement to even `n >= 10`.
+11. Proposition 25: scoped the minimum bound to even `n >= 10`; the `n=8` case remains handled separately in Remark 30.
 
 ## Final build verification
 
