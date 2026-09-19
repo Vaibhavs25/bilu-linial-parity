@@ -39,4 +39,4 @@ SHA-256:
 
 The repository contains the verification suite, drivers, corrected `campaign.py`, and data artifacts. The corrected campaign commit is separate from the historical campaign data; the older campaign artifact is retained as provenance and is not used for causal attribution in the final paper.
 
-The exact final PDF and source hashes above identify the submission files. An immutable archive/release (e.g. Zenodo DOI) should be created externally when the submission snapshot is deposited; the available GitHub connector does not expose release-asset upload for the generated local PDF.
+The exact final PDF and source hashes above identify the submission files. The repository also has the frozen branch `final-2026-09-19` at commit `4ccb2fd508df1a70f76ef40615bfb57ade92b903` containing the final audit/status record and corrected verification protocol. An immutable archive/release (e.g. Zenodo DOI) should be created externally when the submission snapshot is deposited; the available GitHub connector does not expose release-asset upload for the generated local PDF.
