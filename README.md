@@ -13,7 +13,6 @@ Exact local submission artifacts:
 SHA-256:
 - Source: `7975fff4e4a6b7c1f8aba2528bfab1b6ffa374bd5fbc8f6f9dc30dfd49fe5ca8`
 - PDF: `99fb331b5c2d863a59d205e3a82ed3827f9a44352cd237c46697be3cec0d1108`
-- Final package: `8fe8f1b1c5aa07196b5ee6eccfed122bd91d8677071d6528d870b0865c08c993`
 
 The audited source is committed at `submission/final_combined_paper_final.tex`. The generated PDF is supplied as the external binary submission artifact because the available GitHub connector does not expose binary release-asset upload.
 
