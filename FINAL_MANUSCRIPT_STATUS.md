@@ -9,8 +9,8 @@ Final local artifacts:
 - `final_combined_paper_final.pdf`
 
 SHA-256:
-- Source: `c9d3856d1134ad6b0e95cc8f0a076c72d2d0a8a14e8aa7266d9d5a138810109b`
-- PDF: `3f7ab24cbb778b62e4d821ec107f6f0654494b2f23a3c852fa3f04164948a0d4`
+- Source: `ef9d4ae04292f4b492ec9f7d8f5ef21c8190818c78e01680a51bd30f33428f5e`
+- PDF: `4367c72c7e8fb561c817cf5b5575c54b936a73070ff943c7d607de2bfff6ccde`
 
 ## Necessary referee fixes completed
 
