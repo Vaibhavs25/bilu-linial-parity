@@ -9,8 +9,8 @@ This repository contains the verification suite, executed drivers, CI gate, rege
 The final cumulative local manuscript was rebuilt on 19 September 2026 after the referee audit.
 
 Local final artifact hashes:
-- LaTeX SHA-256: `c9d3856d1134ad6b0e95cc8f0a076c72d2d0a8a14e8aa7266d9d5a138810109b`
-- PDF SHA-256: `3f7ab24cbb778b62e4d821ec107f6f0654494b2f23a3c852fa3f04164948a0d4`
+- LaTeX SHA-256: `ef9d4ae04292f4b492ec9f7d8f5ef21c8190818c78e01680a51bd30f33428f5e`
+- PDF SHA-256: `4367c72c7e8fb561c817cf5b5575c54b936a73070ff943c7d607de2bfff6ccde`
 
 The final manuscript is 20 pages. The local build uses pdfTeX 1.40.26 and completed in three passes with no LaTeX warnings. It has 37 labels and all internal references resolve.
 
