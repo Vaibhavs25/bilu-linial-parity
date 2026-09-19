@@ -809,8 +809,9 @@ path growth $2^{2/4}=\sqrt2=\sqrt{d-1}$, exactly critical.
 Non-backtracking forbids it: arriving along one short arc, a walk may
 not reverse into it, so bouncing between the two short arcs is
 deterministic, and branching entropy is carried only by the long arm.
-Exactly: on the theta graph $\Theta(2,2,\lambda)$ \emph{every}
-switching class satisfies $\rho(B_\sigma)\le\rho(B)=1+O(1/\lambda)$
+As computational observations, on the theta graph $\Theta(2,2,\lambda)$
+we found that every tested switching class satisfies
+$\rho(B_\sigma)\le\rho(B)=1+O(1/\lambda)$
 (measured $1.348, 1.268, 1.222, 1.190, 1.150$ for
 $\lambda=3,5,7,9,13$, all nontrivial classes strictly below), and a
 ring of four such quadrilaterals separated by $\lambda$-threads
@@ -857,7 +858,7 @@ has at most $4s(1+R/3)\le2s(R+3)$ continuations. Multiplication over the
 $q$ windows proves the claim.
 \end{proof}
 
-The rate is sharp in the exponent. The \emph{tree-burst} gadget, 
+As a further computational observation, the \emph{tree-burst} gadget,
 two depth-$D$ binary trees with roots and matched leaves joined by
 $\lambda$-threads, every cycle of length $\ge2\lambda+4$, hence
 bicycle-free at radius $\lambda$, has measured $\rho(B)$ tracking
@@ -924,10 +925,9 @@ bicycle-free at radius $5$ at the same $\tfrac13$, and
 generalized-polygon cages of degree $\bar d\sim s^{1/(R+1)}$ push the
 density toward $1$ (such cages exist for $R\in\{2,3,5\}$ by
 Feit-Higman; for other $R$, girth-$(2R+2)$ graphs of growing degree
-serve the same purpose). (Stochastic search over bicycle-free
-graphs found exactly this ceiling, $0.344$ at $R=3$ in small sizes,
-after first refuting the linear conjecture's banana extremal at
-density $1/(R+1)$.) At the operating scale the lemma gives precisely
+serve the same purpose). These deterministic constructions are enough
+for the lower-envelope discussion; no computational search is needed
+for the lemma. At the operating scale the lemma gives precisely
 what is needed: for $s\le\ell$ and $R\ge C\log\ell/\delta$,
 $\operatorname{rank}\le1+\delta\ell$.
 
@@ -1454,11 +1454,11 @@ open.
 \end{conjecture}
 
 \begin{remark}[Computational status for the remaining small even sizes]
-For $n=26,28,30$, extensive heuristic searches have found no signing
-with spectral radius below $\rho_-(n)$, but these computations do not
-constitute exhaustive proofs of optimality. We therefore do not claim
-that $32$ is the first even value for which the global-optimality
-statement fails.
+For $n=26,28,30$, in the heuristic searches described in the
+accompanying computational repository, we found no signing with
+spectral radius below $\rho_-(n)$. These searches are not exhaustive
+proofs of optimality, and we make no claim that $32$ is the first even
+value for which the global-optimality statement fails.
 \end{remark}
 
 \subsection{\texorpdfstring{The exceptional case $n=8$}{The exceptional case n=8}}
