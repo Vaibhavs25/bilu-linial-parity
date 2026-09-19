@@ -37,3 +37,5 @@ jobs:
           fi
           git commit -m "Build final submission PDF"
           git push
+
+# Trigger build on branch update.
