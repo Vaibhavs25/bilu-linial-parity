@@ -4,15 +4,15 @@
 
 **Parity families and signed spectra: kernel averaging, near-Ramanujan bounds, and exact circulant models**
 
-The September 19, 2026 integrated manuscript is frozen with the final proof/presentation cleanup.
+The September 19, 2026 integrated manuscript is frozen with the final proof/presentation and referee-boundary cleanup.
 
 Exact local submission artifacts:
 - `final_combined_paper_final.tex`
 - `final_combined_paper_final.pdf`
 
 SHA-256:
-- Source: `13d6bff3f167e4b7878876f739e5aa52f9f4aa285ee2ba3617c1016ce8492ace`
-- PDF: `6b72cdec9ad480ee836e0f5aef90d16ea820ecb5e367980891c436d50902b7c3`
+- Source: `8013afe7a537ef902221869cb5f0c328c6b865e1fe14ba6633ce7d7295ee3580`
+- PDF: `71b53c1b516e7f2be05a7e6ffceebf7e9cedabec8bc25500abdf8ae194d88402`
 
 The audited source is frozen at `submission/final_combined_paper_final.tex`. The generated PDF is supplied as the external binary submission artifact because the available GitHub connector does not expose binary release-asset upload.
 
