@@ -64,4 +64,4 @@ The bicycle-free result is presented as a conditioning consequence of the known 
 - `atlas.csv`, `campaign.csv`, `variance_onset_v1.csv`, `variance_onset_v2.csv` — archived computational data.
 - `campaign.py`, `variance_onset.py`, `trace_rates.py`, `signed_spectra.py`, `prism_L.py`, `gadgets.py`, and related drivers — reproducibility and exploratory computations.
 
-The `main` branch is the canonical public branch. Earlier freeze branches such as `final-2026-09-19` are retained as historical snapshots.
+The `main` branch is the canonical public branch. The exact current release is also frozen at `final-2026-09-20`; the earlier `final-2026-09-19` branch is retained as a historical snapshot.
