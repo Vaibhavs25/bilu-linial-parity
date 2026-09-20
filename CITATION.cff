@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+title: "Parity families and signed spectra: kernel averaging, near-Ramanujan bounds, and exact circulant models"
+authors:
+  - family-names: Suvagiya
+    given-names: Vaibhav
+version: "September 2026 audited release"
+date-released: 2026-09-20
+url: "https://github.com/Vaibhavs25/bilu-linial-parity"
+repository-code: "https://github.com/Vaibhavs25/bilu-linial-parity"
+license: MIT
+keywords:
+  - signed graphs
+  - Bilu-Linial conjecture
+  - parity families
+  - Ihara zeta
+  - non-backtracking walks
+  - circulant graphs
