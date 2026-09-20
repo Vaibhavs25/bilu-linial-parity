@@ -28,7 +28,7 @@ The corresponding official PDF is:
 
 SHA-256:
 
-`4855ce5b45dc9b46fb0741db5f556dff7e248c68de41471cad853a4400438795`
+`c4980d0d7445d562ee70c49c598c949de873a190f5ca7ada5045b444faf6bd8c`
 
 The PDF is recorded by hash but is not committed through this connector workflow because the available GitHub file-write action accepts UTF-8 text rather than arbitrary binary files.
 
