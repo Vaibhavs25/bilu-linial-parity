@@ -10,7 +10,7 @@ The canonical public manuscript is the **20-page audited revision** represented 
 
 Official local PDF:
 
-- `Parity_families_signed_spectra_FINAL_OFFICIAL.pdf`
+- `submission/final_combined_paper_final.pdf` (same 20-page binary; manual GitHub upload target)
 
 SHA-256:
 - Source: `1f7fc908f8eb6569934333dea538192fb7f02fd9ecffca016156723932cd49bc`
