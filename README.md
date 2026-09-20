@@ -13,7 +13,7 @@ The canonical manuscript source is:
 
 The official compiled PDF corresponding to this source is the **20-page** artifact:
 
-- `Parity_families_signed_spectra_FINAL_OFFICIAL.pdf` — distributed as an external binary artifact in this release workflow.
+- `submission/final_combined_paper_final.pdf` — the canonical PDF path for the release; it is currently tracked by hash and must be attached manually because the available GitHub connector cannot write binary files.
 
 ### SHA-256
 
