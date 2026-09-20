@@ -1,37 +1,45 @@
-# Final manuscript status — 19 September 2026
+# Final manuscript status — September 2026
 
-The final cumulative manuscript is:
+## Canonical release
 
 **Parity families and signed spectra: kernel averaging, near-Ramanujan bounds, and exact circulant models**
 
-Final local artifacts: `final_combined_paper_final.tex`, `final_combined_paper_final.pdf`.
+The canonical public manuscript is the **20-page audited revision** represented by:
+
+- `submission/final_combined_paper_final.tex`
+
+Official local PDF:
+
+- `Parity_families_signed_spectra_FINAL_OFFICIAL.pdf`
 
 SHA-256:
-- Source: `7975fff4e4a6b7c1f8aba2528bfab1b6ffa374bd5fbc8f6f9dc30dfd49fe5ca8`
-- PDF: `99fb331b5c2d863a59d205e3a82ed3827f9a44352cd237c46697be3cec0d1108`
+- Source: `7640da6da5839d06a8f8db509005425f06285ce60bfc2defd7bc8311c1b302d7`
+- PDF: `4855ce5b45dc9b46fb0741db5f556dff7e248c68de41471cad853a4400438795`
 
-## Final referee-audit changes completed
+## Final substantive scope
 
-1. Proposition 16 explicitly handles pure-cycle supports by direct counting; the reachability lemma is not invoked there.
-2. Propositions 21–23 retain `k=ceil((log n)^2)` and `ell=2k`; the rank estimate is checked uniformly for every `1 <= j <= ell`, with the constant requirement explicit.
-3. Proposition 13 cites Wielandt's equality case through Horn–Johnson, *Matrix Analysis*, 2nd ed., Thm. 8.3.11.
-4. Proposition 25 isolates and proves the holonomy-to-diagonal-unitary gauge lemma.
-5. Constrained-family and unrestricted minima are explicitly separated; period-8 global optimality remains conjectural.
-6. Random-signing claims are explicitly empirical.
-7. The abstract distinguishes the closed-walk identity from the later non-backtracking linearization.
-8. Reference [16]'s July 16, 2026 date is retained.
-9. Corrected campaign code uses exact-rank affine control and makes no uniform-MCMC claim; it has not been rerun for this release.
+The final revision incorporates the referee-driven changes that matter to the mathematical framing:
 
-## Final build verification
+1. The bounded-rank counting proposition is explicitly finite-scale and is not presented as an asymptotic fixed-rank regime at the $(\log n)^2$ scale.
+2. The bicycle-free existence statement is an explicit conditioning consequence of the Mohanty--O'Donnell--Paredes random-signing theorem.
+3. The fixed-graph totally-even slice is distinguished from the doubling lower benchmark.
+4. The non-backtracking spectral calculation for dense trapping uses the sharp Ihara--Bass input.
+5. The holonomy argument explicitly addresses the integer cycle lattice.
+6. The constrained quadrilateral-family minimum is separated from the unrestricted signing minimum.
+7. Period-8 global optimality remains a conjecture; the gauge-fixed periodic scans are explicitly supporting evidence only.
+8. The $8\times8$ determinant and $s=2$ factorization in Theorem 26 are covered by an exact SymPy verification script pinned to a repository commit.
+9. Computational observations are labeled as exact checks or exploratory evidence rather than replacements for proof.
 
-- 22 pages, letter size.
-- pdfTeX 1.40.26.
-- Three-pass compilation with `-halt-on-error`.
-- No LaTeX errors or warnings on the final pass.
-- 38 unique labels; no duplicate labels; all source references resolve.
-- PDF metadata populated.
-- Full rendered-page inspection completed with no visible clipping, overlap, broken glyphs, or malformed pages.
+## Build verification
 
-## Reproducibility freeze
+- 20 pages, letter size.
+- Three consecutive `pdflatex -halt-on-error` passes.
+- No final-pass LaTeX errors or warnings.
+- Rendered-page inspection completed.
+- PDF comparison against the uploaded 20-page revision changes only page 17, where the pinned verification-script URL was added.
 
-`Vaibhavs25/bilu-linial-parity` branch `final-2026-09-19` freezes the audited source, corrected code, preserved data, status record, and SHA-256 manifest in one final commit. The generated PDF is the external binary artifact identified by the PDF hash above.
+## Repository status
+
+The `main` branch is the canonical public branch. The canonical manuscript source is committed under `submission/final_combined_paper_final.tex`.
+
+The PDF remains an external binary artifact in this connector workflow; its SHA-256 is recorded above and in `submission/SHA256SUMS.txt`.
