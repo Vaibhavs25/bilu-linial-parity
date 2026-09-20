@@ -5,9 +5,9 @@ Canonical branch: `main`
 ## Release artifacts
 
 - `submission/final_combined_paper_final.tex`
-  - SHA-256: `7640da6da5839d06a8f8db509005425f06285ce60bfc2defd7bc8311c1b302d7`
+  - SHA-256: `1f7fc908f8eb6569934333dea538192fb7f02fd9ecffca016156723932cd49bc`
 - `Parity_families_signed_spectra_FINAL_OFFICIAL.pdf`
-  - SHA-256: `4855ce5b45dc9b46fb0741db5f556dff7e248c68de41471cad853a4400438795`
+  - SHA-256: `c4980d0d7445d562ee70c49c598c949de873a190f5ca7ada5045b444faf6bd8c`
   - 20 pages
   - external binary release artifact for this connector workflow
 - `submission/verify_theorem26.py`
