@@ -24,7 +24,7 @@ The pinned repository script is also retained at the repository root as `verify_
 
 The corresponding official PDF is:
 
-`Parity_families_signed_spectra_FINAL_OFFICIAL.pdf`
+`submission/final_combined_paper_final.pdf`
 
 SHA-256:
 
