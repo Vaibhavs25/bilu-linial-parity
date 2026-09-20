@@ -1,10 +1,9 @@
-# Final submission manifest — 19 September 2026
+# Final release manifest — 19 September 2026
 
 Frozen branch: `final-2026-09-19`
 
-Exact release artifacts:
-- `final_combined_paper_final.tex`: 7975fff4e4a6b7c1f8aba2528bfab1b6ffa374bd5fbc8f6f9dc30dfd49fe5ca8
-- `final_combined_paper_final.pdf`: 99fb331b5c2d863a59d205e3a82ed3827f9a44352cd237c46697be3cec0d1108
-- `final_submission_package_vfinal.zip`: 8fe8f1b1c5aa07196b5ee6eccfed122bd91d8677071d6528d870b0865c08c993
+Exact submission artifacts:
+- `final_combined_paper_final.tex`: 8013afe7a537ef902221869cb5f0c328c6b865e1fe14ba6633ce7d7295ee3580
+- `final_combined_paper_final.pdf`: 71b53c1b516e7f2be05a7e6ffceebf7e9cedabec8bc25500abdf8ae194d88402
 
-The repository freeze contains the exact audited source plus the corrected code and preserved data artifacts. The PDF binary is supplied separately because the available connector does not expose binary release-asset upload.
+The PDF is supplied separately as an external binary artifact because the available GitHub connector does not expose binary release-asset upload. The corrected experimental protocol is committed, while historical campaign data remain explicitly marked as provenance.

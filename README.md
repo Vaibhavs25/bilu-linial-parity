@@ -4,17 +4,17 @@
 
 **Parity families and signed spectra: kernel averaging, near-Ramanujan bounds, and exact circulant models**
 
-The September 19, 2026 integrated manuscript is frozen with the audited proof and presentation revisions.
+The September 19, 2026 integrated manuscript is frozen with the final proof/presentation and referee-boundary cleanup.
 
 Exact local submission artifacts:
 - `final_combined_paper_final.tex`
 - `final_combined_paper_final.pdf`
 
 SHA-256:
-- Source: `7975fff4e4a6b7c1f8aba2528bfab1b6ffa374bd5fbc8f6f9dc30dfd49fe5ca8`
-- PDF: `99fb331b5c2d863a59d205e3a82ed3827f9a44352cd237c46697be3cec0d1108`
+- Source: `8013afe7a537ef902221869cb5f0c328c6b865e1fe14ba6633ce7d7295ee3580`
+- PDF: `71b53c1b516e7f2be05a7e6ffceebf7e9cedabec8bc25500abdf8ae194d88402`
 
-The audited source is committed at `submission/final_combined_paper_final.tex`. The generated PDF is supplied as the external binary submission artifact because the available GitHub connector does not expose binary release-asset upload.
+The audited source is frozen at `submission/final_combined_paper_final.tex`. The generated PDF is supplied as the external binary submission artifact because the available GitHub connector does not expose binary release-asset upload.
 
 ## Verification
 
@@ -30,4 +30,4 @@ The corrected campaign protocol has not been rerun for this final manuscript sna
 
 Branch: `final-2026-09-19`
 
-The freeze commit contains the audited source, corrected code, preserved data, release status, and SHA-256 manifest. The PDF remains an external-but-hashed submission artifact.
+The freeze commit contains the audited source, corrected code, preserved data, status record, and SHA-256 manifest. The PDF remains an external-but-hashed submission artifact.
