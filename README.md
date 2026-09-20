@@ -11,14 +11,14 @@ The canonical manuscript source is:
 
 - `submission/final_combined_paper_final.tex`
 
-The official compiled PDF corresponding to this source is the 20-page artifact:
+The official compiled PDF corresponding to this source is the **20-page** artifact:
 
 - `Parity_families_signed_spectra_FINAL_OFFICIAL.pdf` — distributed as an external binary artifact in this release workflow.
 
 ### SHA-256
 
-- Source: `7640da6da5839d06a8f8db509005425f06285ce60bfc2defd7bc8311c1b302d7`
-- PDF: `4855ce5b45dc9b46fb0741db5f556dff7e248c68de41471cad853a4400438795`
+- Source: `1f7fc908f8eb6569934333dea538192fb7f02fd9ecffca016156723932cd49bc`
+- PDF: `c4980d0d7445d562ee70c49c598c949de873a190f5ca7ada5045b444faf6bd8c`
 
 The PDF hash is recorded even though the available GitHub connector cannot upload binary release assets. When the PDF is manually attached to GitHub, verify it against the recorded hash.
 
@@ -37,6 +37,12 @@ python3 verify_all.py
 ```
 
 The manuscript was compiled with three consecutive `pdflatex -halt-on-error` passes. The final local build is 20 pages and has no final-pass LaTeX errors or warnings.
+
+The theorem-specific verification script is pinned to the repository commit:
+
+```
+b37002b020edd5d26065a0ee6ee7cff85cf7814c
+```
 
 ## Scientific scope
 
