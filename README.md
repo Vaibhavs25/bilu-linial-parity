@@ -20,7 +20,7 @@ The official compiled PDF corresponding to this source is the **20-page** artifa
 - Source: `1f7fc908f8eb6569934333dea538192fb7f02fd9ecffca016156723932cd49bc`
 - PDF: `c4980d0d7445d562ee70c49c598c949de873a190f5ca7ada5045b444faf6bd8c`
 
-The PDF hash is recorded even though the available GitHub connector cannot upload binary release assets. When the PDF is manually attached to GitHub, verify it against the recorded hash.
+The PDF hash is recorded even though the available GitHub connector cannot upload binary release assets. The intended GitHub path for the manual binary upload is `submission/final_combined_paper_final.pdf`; verify it against the recorded hash before attaching it.
 
 ## Reproducibility
 
