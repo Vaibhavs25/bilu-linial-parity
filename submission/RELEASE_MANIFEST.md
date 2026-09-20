@@ -1,10 +1,30 @@
-# Final submission manifest — 19 September 2026
+# Official release manifest — September 2026
 
-Frozen branch: `final-2026-09-19`
+Canonical branch: `main`
 
-Exact release artifacts:
-- `final_combined_paper_final.tex`: 7975fff4e4a6b7c1f8aba2528bfab1b6ffa374bd5fbc8f6f9dc30dfd49fe5ca8
-- `final_combined_paper_final.pdf`: 99fb331b5c2d863a59d205e3a82ed3827f9a44352cd237c46697be3cec0d1108
-- `final_submission_package_vfinal.zip`: 8fe8f1b1c5aa07196b5ee6eccfed122bd91d8677071d6528d870b0865c08c993
+## Release artifacts
 
-The repository freeze contains the exact audited source plus the corrected code and preserved data artifacts. The PDF binary is supplied separately because the available connector does not expose binary release-asset upload.
+- `submission/final_combined_paper_final.tex`
+  - SHA-256: `7640da6da5839d06a8f8db509005425f06285ce60bfc2defd7bc8311c1b302d7`
+- `Parity_families_signed_spectra_FINAL_OFFICIAL.pdf`
+  - SHA-256: `4855ce5b45dc9b46fb0741db5f556dff7e248c68de41471cad853a4400438795`
+  - 20 pages
+  - external binary release artifact for this connector workflow
+- `submission/verify_theorem26.py`
+  - exact symbolic check of the $8\times8$ determinant identity and the $s=2$ factorization
+
+## Verification commit
+
+The pinned theorem-specific verification script is available at commit:
+
+`b37002b020edd5d26065a0ee6ee7cff85cf7814c`
+
+File:
+
+`verify_theorem26.py`
+
+## Release rule
+
+The source under `submission/final_combined_paper_final.tex` is the canonical manuscript source. The recorded PDF hash must match the PDF produced from that source by the documented three-pass LaTeX build.
+
+No new computational campaign results are claimed for this release.
