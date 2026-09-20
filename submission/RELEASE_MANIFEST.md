@@ -1,6 +1,7 @@
 # Official release manifest — September 2026
 
 Canonical branch: `main`
+Frozen release branch: `final-2026-09-20`
 
 ## Release artifacts
 
