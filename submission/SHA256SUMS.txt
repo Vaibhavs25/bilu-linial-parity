@@ -1,3 +1,3 @@
 # SHA-256 manifest — official September 2026 release
 1f7fc908f8eb6569934333dea538192fb7f02fd9ecffca016156723932cd49bc  submission/final_combined_paper_final.tex
-c4980d0d7445d562ee70c49c598c949de873a190f5ca7ada5045b444faf6bd8c  Parity_families_signed_spectra_FINAL_OFFICIAL.pdf  # external binary artifact
+c4980d0d7445d562ee70c49c598c949de873a190f5ca7ada5045b444faf6bd8c  submission/final_combined_paper_final.pdf  # external binary artifact
